@@ -1,3 +1,66 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+@layer utilities {
+  .hamburger-line {
+    @apply my-2 block h-[2px] w-[30px] bg-black;
+  }
+}
+
+.hamburger-active > span:nth-child(1) {
+  @apply rotate-45;
+}
+
+.hamburger-active > span:nth-child(2) {
+  @apply scale-0;
+}
+
+.hamburger-active > span:nth-child(3) {
+  @apply -rotate-45;
+}
+
+.active > p {
+  @apply relative w-fit after:absolute after:-bottom-1/4 after:left-0 after:block after:h-[3px] after:w-full after:bg-slate-800  after:content-[''];
+}
+
+.swiper-button-next::after {
+  @apply !text-lg md:!text-4xl;
+}
+.swiper-button-prev::after {
+  @apply !text-lg md:!text-4xl;
+}
+
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+/* Firefox */
+input[type="number"] {
+  -moz-appearance: textfield;
+}
+
+/* Hero Carousel */
+.hero-carousel__slides {
+  @apply w-full;
+}
+
+.swiper-button-prev,
+.swiper-button-next {
+  @apply !text-white;
+}
+
+.swiper-pagination-bullet-active {
+  @apply !bg-white;
+}
+
+.swiper-slide-cover {
+  transition: 10s ease-out;
+  transform: scale(1.2);
+}
+
+input:focus {
+  outline: none;
+}

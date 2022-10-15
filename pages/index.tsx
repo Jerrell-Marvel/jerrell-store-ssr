@@ -1,10 +1,15 @@
 import type { NextPage } from "next";
 import Head from "next/head";
 import Image from "next/image";
+import HeroCarousel from "../components/carousel/HeroCarousel";
 import styles from "../styles/Home.module.css";
 
 const Home: NextPage = () => {
-  return <div className="text-green-500 text-3xl uppercase">test</div>;
+  return (
+    <div id="home" className="pt-20">
+      <HeroCarousel />
+    </div>
+  );
 };
 
 export default Home;
