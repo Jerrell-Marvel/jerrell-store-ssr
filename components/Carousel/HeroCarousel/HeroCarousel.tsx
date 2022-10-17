@@ -35,7 +35,6 @@ function HeroCarousel() {
         {heroImages.map((img, index) => {
           return (
             <SwiperSlide className="hero-carousel__slide w-full" key={index}>
-              {/* <img src={img} alt="" className="hero-carousel__img w-full" /> */}
               <Image src={img} alt={img} layout="responsive" width="2" height="1" />
             </SwiperSlide>
           );
