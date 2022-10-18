@@ -7,6 +7,7 @@ import "swiper/css/navigation";
 import "swiper/css/effect-fade";
 import Image from "next/image";
 
+// Images url
 const heroImages = ["https://source.unsplash.com/random/1600x800", "https://source.unsplash.com/random/1600x801", "https://source.unsplash.com/random/1600x799"];
 
 function HeroCarousel() {
