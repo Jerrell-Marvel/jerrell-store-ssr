@@ -37,18 +37,20 @@ type ProductsType = {
 type ProductsCarouselProps = {
   carouselProducts: {
     success: boolean;
-    products: {
-      _id: string;
-      name: string;
-      weight: string;
-      category: string;
-      stock: string;
-      description: string;
-      price: string;
-      createdAt: string;
-      updatedAt: string;
-      image: string;
-    }[];
+    products:
+      | {
+          _id: string;
+          name: string;
+          weight: string;
+          category: string;
+          stock: string;
+          description: string;
+          price: string;
+          createdAt: string;
+          updatedAt: string;
+          image: string;
+        }[]
+      | null;
   };
 };
 
@@ -91,6 +93,22 @@ function ProductsCarousel({ carouselProducts }: ProductsCarouselProps) {
   //       </section>
   //     );
   //   }
+
+  if (carouselProducts.products === null) {
+    return (
+      <section className="px-6 py-12 md:py-16">
+        <div className="w-full overflow-hidden">
+          <div className="flex h-72 w-fit">
+            {[...Array(10)].map((element, index) => (
+              <div className="mr-4 flex h-full w-64 animate-loading items-center justify-center rounded-sm bg-slate-200 text-center" key={index}>
+                Failed to get products
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+    );
+  }
 
   return (
     <section className="px-6 py-12 md:py-16">

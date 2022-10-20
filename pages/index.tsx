@@ -28,29 +28,39 @@ const Home: NextPage<HomeProps> = ({ carouselProducts }) => {
 type HomeProps = {
   carouselProducts: {
     success: boolean;
-    products: {
-      _id: string;
-      name: string;
-      weight: string;
-      category: string;
-      stock: string;
-      description: string;
-      price: string;
-      createdAt: string;
-      updatedAt: string;
-      image: string;
-    }[];
+    products:
+      | {
+          _id: string;
+          name: string;
+          weight: string;
+          category: string;
+          stock: string;
+          description: string;
+          price: string;
+          createdAt: string;
+          updatedAt: string;
+          image: string;
+        }[]
+      | null;
   };
 };
 
 export const getServerSideProps: GetServerSideProps<HomeProps> = async () => {
-  const response = await fetch("http://localhost:5000/api/v1/products?sort=newest");
-  const data = (await response.json()) as HomeProps["carouselProducts"];
-  return {
-    props: {
-      carouselProducts: data,
-    },
-  };
+  try {
+    const response = await fetch("http://localhost:5000/api/v1/products?sort=newest");
+    const data = (await response.json()) as HomeProps["carouselProducts"];
+    return {
+      props: {
+        carouselProducts: data,
+      },
+    };
+  } catch (err) {
+    return {
+      props: {
+        carouselProducts: { success: false, products: null },
+      },
+    };
+  }
 };
 
 export default Home;
