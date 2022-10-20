@@ -11,6 +11,8 @@ import { FreeMode } from "swiper";
 import Link from "next/link";
 // import { Link } from "react-router-dom";
 
+import Image from "next/image";
+
 export type ProductsProps = ProductsType;
 
 type ProductsType = {
@@ -126,7 +128,8 @@ function ProductsCarousel({ carouselProducts }: ProductsCarouselProps) {
               <SwiperSlide className="!w-64" key={index}>
                 <Link href={`/product/${product._id}`}>
                   <a className="z-10 flex w-full flex-col">
-                    <img src={"https://source.unsplash.com/random/600x600"} alt="temporary alt" className="mb-3 w-full" />
+                    <Image src={"https://source.unsplash.com/random/600x600"} alt="temporary alt" layout="responsive" width="1" height="1" />
+                    {/* <img src={"https://source.unsplash.com/random/600x600"} alt="temporary alt" className="mb-3 w-full" /> */}
                     <h3>{product.name}</h3>
                     <p>{product.description}</p>
                   </a>
