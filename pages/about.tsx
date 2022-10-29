@@ -1,5 +1,6 @@
 import { NextPage } from "next";
 import Link from "next/link";
+import Image from "next/image";
 
 const About: NextPage = () => {
   return (
@@ -14,12 +15,13 @@ const About: NextPage = () => {
               suscipit sint cum sequi voluptates quia quo, possimus vel hic sunt accusamus amet quae iste beatae impedit voluptate.
             </p>
             <Link href="/">
-              <a className="my-4 w-full border-2 border-black bg-primary py-4 uppercase text-white transition-colors duration-300 hover:bg-white hover:text-black text-center">start shopping</a>
+              <a className=" block my-4 w-full border-2 border-black bg-primary py-4 uppercase text-white transition-colors duration-300 hover:bg-white hover:text-black text-center">start shopping</a>
             </Link>
           </div>
 
           <div className="h-full w-full sm:pl-4 md:pl-6 lg:pl-8">
-            <img src="https://www.designyourway.net/blog/wp-content/uploads/2019/05/iPad-Pro-wallpaper-54-700x700.jpg" alt="" className="mx-auto max-w-full" />
+            <Image src="https://source.unsplash.com/random/600x600" alt="temporary-alt" layout="responsive" width="1" height="1" />
+            {/* <img src="https://www.designyourway.net/blog/wp-content/uploads/2019/05/iPad-Pro-wallpaper-54-700x700.jpg" alt="" className="mx-auto max-w-full" /> */}
           </div>
         </div>
       </div>
