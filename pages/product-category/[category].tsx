@@ -4,18 +4,20 @@ import ShowProducts from "../../components/ShowProducts/ShowProducts";
 export type ProductCategoryProps = {
   data: {
     success: boolean;
-    products: {
-      _id: string;
-      name: string;
-      weight: string;
-      category: string;
-      stock: string;
-      description: string;
-      price: string;
-      createdAt: string;
-      updatedAt: string;
-      image: string;
-    }[];
+    products:
+      | {
+          _id: string;
+          name: string;
+          weight: string;
+          category: string;
+          stock: string;
+          description: string;
+          price: string;
+          createdAt: string;
+          updatedAt: string;
+          image: string;
+        }[]
+      | null;
     count: number;
     totalCount: number;
   };
@@ -41,17 +43,28 @@ export const getServerSideProps: GetServerSideProps<ProductCategoryProps> = asyn
 
   let response;
 
-  if (category === "all") {
-    response = await fetch(`http://localhost:5000/api/v1/products`);
-  } else {
-    response = await fetch(`http://localhost:5000/api/v1/products?category=${category}`);
+  try {
+    if (category === "all") {
+      response = await fetch(`http://localhost:5000/api/v1/products`);
+    } else {
+      response = await fetch(`http://localhost:5000/api/v1/products?category=${category}`);
+    }
+    const data = (await response.json()) as ProductCategoryProps["data"];
+    return {
+      props: {
+        data,
+      },
+    };
+  } catch (err) {
+    return {
+      props: {
+        data: {
+          success: false,
+          products: null,
+          count: 0,
+          totalCount: 0,
+        },
+      },
+    };
   }
-
-  const data = (await response.json()) as ProductCategoryProps["data"];
-
-  return {
-    props: {
-      data,
-    },
-  };
 };
