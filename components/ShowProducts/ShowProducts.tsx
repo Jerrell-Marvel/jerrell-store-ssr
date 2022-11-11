@@ -1,6 +1,27 @@
 import { NextPage } from "next";
 import Link from "next/link";
-import { ProductCategoryProps as ShowProductsProps } from "../../pages/product-category/[category]";
+
+type ShowProductsProps = {
+  data: {
+    success: boolean;
+    products:
+      | {
+          _id: string;
+          name: string;
+          weight: string;
+          category: string;
+          stock: string;
+          description: string;
+          price: string;
+          createdAt: string;
+          updatedAt: string;
+          image: string;
+        }[]
+      | null;
+    count: number;
+    totalCount: number;
+  };
+};
 
 const ShowProducts: NextPage<ShowProductsProps> = ({ data }) => {
   if (!data.success || data.products === null) {
