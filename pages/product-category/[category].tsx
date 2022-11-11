@@ -1,4 +1,7 @@
 import { GetServerSideProps, NextPage } from "next";
+import Router, { useRouter } from "next/router";
+import { useState } from "react";
+import Pagination from "../../components/Pagination/Pagination";
 import ShowProducts from "../../components/ShowProducts/ShowProducts";
 
 export type ProductCategoryProps = {
@@ -28,6 +31,7 @@ const ProductCategory: NextPage<ProductCategoryProps> = ({ data }) => {
     <>
       <div className="bg-slate-100 px-6 py-10">
         <ShowProducts data={data} />
+        <Pagination pageCount={data.totalCount} />
       </div>
     </>
   );
@@ -39,7 +43,7 @@ export const getServerSideProps: GetServerSideProps<ProductCategoryProps> = asyn
   const {
     query: { category },
   } = context;
-  console.log(category);
+  console.log(context.query);
 
   let response;
 
