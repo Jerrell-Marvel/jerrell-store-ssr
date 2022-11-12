@@ -5,6 +5,7 @@ import { useState } from "react";
 import Pagination from "../../components/Pagination/Pagination";
 import ShowProducts from "../../components/ShowProducts/ShowProducts";
 import axios from "axios";
+import SortProductsDropdown from "../../components/Dropdown/SortProductsDropdown";
 
 export type ProductCategoryProps = {
   data: {
@@ -33,6 +34,7 @@ const ProductCategory: NextPage<ProductCategoryProps> = ({ data }) => {
   return (
     <>
       <div className="bg-slate-100 px-6 py-10">
+        <SortProductsDropdown />
         <ShowProducts data={data} />
         <Pagination pageCount={Math.ceil(data.totalCount / 10)} activePage={Number(router.query.page) || 1} />
       </div>
@@ -44,27 +46,20 @@ export default ProductCategory;
 
 export const getServerSideProps: GetServerSideProps<ProductCategoryProps> = async (context) => {
   const {
-    query: { category, page },
+    query: { category, page, sort },
   } = context;
 
-  let apiUrl = "http://localhost:5000/api/v1/products";
-
-  if (page) {
-    apiUrl += `page=${page}`;
-  }
-
-  let response;
-
   try {
-    response = await axios.get("http://localhost:5000/api/v1/products", {
+    const response = await axios.get("http://localhost:5000/api/v1/products", {
       params: {
+        sort,
         page,
       },
     });
 
     const data = response.data as ProductCategoryProps["data"];
 
-    console.log(data);
+    console.log("GET SERVER SIDE PROPS RUNNING");
     return {
       props: {
         data,

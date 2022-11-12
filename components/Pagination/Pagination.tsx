@@ -22,7 +22,7 @@ export default function Pagination({ pageCount, activePage }: PaginationPropsTyp
             className="px-2 py-1 md:px-6 md:py-3"
             onClick={() => {
               if (activePage - 1 >= 1) {
-                router.push(`${path}?page=${activePage - 1}`);
+                router.push(`${path}?sort=${router.query.sort || "newest"}&page=${activePage - 1}`);
               }
             }}
           >
@@ -34,7 +34,7 @@ export default function Pagination({ pageCount, activePage }: PaginationPropsTyp
                 <div
                   onClick={() => {
                     if (Number(router.query.page) !== index + 1) {
-                      router.push(`${path}?page=${index + 1}`);
+                      router.push(`${path}?sort=${router.query.sort || "newest"}&page=${index + 1}`);
                     }
                   }}
                   key={index}
@@ -51,7 +51,7 @@ export default function Pagination({ pageCount, activePage }: PaginationPropsTyp
             onClick={() => {
               console.log(pageCount);
               if (activePage + 1 <= pageCount) {
-                router.push(`${path}?page=${activePage + 1}`);
+                router.push(`${path}?sort=${router.query.sort || "newest"}&page=${activePage + 1}`);
               }
             }}
           >
