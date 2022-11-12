@@ -4,6 +4,7 @@ import Router, { useRouter } from "next/router";
 import { useState } from "react";
 import Pagination from "../../components/Pagination/Pagination";
 import ShowProducts from "../../components/ShowProducts/ShowProducts";
+import axios from "axios";
 
 export type ProductCategoryProps = {
   data: {
@@ -46,7 +47,7 @@ export const getServerSideProps: GetServerSideProps<ProductCategoryProps> = asyn
     query: { category, page },
   } = context;
 
-  let apiUrl = "http://localhost:5000/api/v1/products?";
+  let apiUrl = "http://localhost:5000/api/v1/products";
 
   if (page) {
     apiUrl += `page=${page}`;
@@ -55,17 +56,22 @@ export const getServerSideProps: GetServerSideProps<ProductCategoryProps> = asyn
   let response;
 
   try {
-    if (category === "all") {
-      response = await fetch(apiUrl);
-    } else {
-      response = await fetch(`http://localhost:5000/api/v1/products?category=${category}`);
-    }
-    const data = (await response.json()) as ProductCategoryProps["data"];
+    response = await axios.get("http://localhost:5000/api/v1/products", {
+      params: {
+        page,
+      },
+    });
+
+    const data = response.data as ProductCategoryProps["data"];
+
+    console.log(data);
     return {
       props: {
         data,
       },
     };
+
+    // const data = (await response.json()) as ProductCategoryProps["data"];
   } catch (err) {
     return {
       props: {
