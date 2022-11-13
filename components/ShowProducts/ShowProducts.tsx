@@ -1,5 +1,6 @@
 import { NextPage } from "next";
 import Link from "next/link";
+import Image from "next/image";
 
 type ShowProductsProps = {
   data: {
@@ -62,7 +63,7 @@ const ShowProducts: NextPage<ShowProductsProps> = ({ data }) => {
                   <div className="flex h-full flex-col gap-4 rounded-xl bg-white p-4 transition-transform duration-300 hover:scale-105">
                     <h3 className="text-xl font-medium">{product.name}</h3>
                     <div>
-                      <img src={`https://source.unsplash.com/random/200x200`} className="w-full" alt="temporary-alt"></img>
+                      <Image src={"https://source.unsplash.com/random/600x600"} alt="temporary alt" layout="responsive" width="1" height="1" />
                     </div>
                     <div className="">{product.description}</div>
                     <div>{product.price}</div>

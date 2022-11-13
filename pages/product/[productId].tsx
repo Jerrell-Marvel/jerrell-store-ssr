@@ -1,6 +1,7 @@
 import { GetServerSideProps, NextPage } from "next";
 import axios from "axios";
 import { useState } from "react";
+import Image from "next/image";
 
 type ProductDetailsProps = {
   data: {
@@ -33,7 +34,7 @@ const ProductDetails: NextPage<ProductDetailsProps> = ({ data }) => {
     <section className="bg-slate-50 px-6 pt-20 pb-6">
       <div className="flex flex-wrap">
         <div className="w-full md:w-1/2">
-          <img src={`https://source.unsplash.com/random/400x300`} className="w-full" />
+          <Image src={"https://source.unsplash.com/random/800x600"} alt="temporary alt" layout="responsive" width="4" height="3" />
         </div>
 
         <div className="w-full md:w-1/2 md:pl-8">
