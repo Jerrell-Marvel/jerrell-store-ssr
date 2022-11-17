@@ -75,7 +75,7 @@ const Navbar = () => {
       <header className="fixed z-[99] flex h-20 w-full items-center border-b-2 bg-white px-6">
         <div className="flex w-full items-center">
           <Link href="/" passHref>
-            <div className="py-6 pr-4 font-bold uppercase">jStore</div>
+            <div className="py-6 pr-4 font-bold uppercase text-black">jStore</div>
           </Link>
 
           <form
@@ -108,9 +108,9 @@ const Navbar = () => {
                   <li key={index}>
                     <Link href={`/${navLink}`} passHref>
                       <div className=" group block w-full py-3 pl-6 md:py-6 md:px-4 cursor-pointer" onClick={() => setNavActive((prev) => !prev)}>
-                        <p className="relative w-fit font-medium uppercase after:absolute after:-bottom-1/4 after:left-1/2 after:block after:h-[3px]  after:w-0 after:bg-slate-800 after:transition-all after:duration-300 after:content-[''] group-hover:after:left-0 group-hover:after:right-0 group-hover:after:w-full">
-                          <a>{navLink}</a>
-                        </p>
+                        <span className="relative w-fit font-medium uppercase after:absolute after:-bottom-1/4 after:left-1/2 after:block after:h-[3px]  after:w-0 after:bg-slate-800 after:transition-all after:duration-300 after:content-[''] group-hover:after:left-0 group-hover:after:right-0 group-hover:after:w-full text-black">
+                          {navLink}
+                        </span>
                       </div>
                     </Link>
                   </li>
@@ -119,15 +119,15 @@ const Navbar = () => {
 
               <li>
                 <div onClick={() => setShowProductCategories((prev) => !prev)} className="group relative block w-full cursor-pointer py-3 pl-6 md:py-6 md:px-4">
-                  <p className="relative w-fit font-medium uppercase before:mr-2 before:inline-block before:rotate-90 before:content-['▶'] after:absolute  after:-bottom-1/4 after:left-1/2 after:block after:h-[3px] after:w-0 after:bg-slate-800 after:transition-all after:duration-300  group-hover:after:left-0 group-hover:after:right-0 group-hover:after:w-full">
+                  <span className="relative w-fit font-medium uppercase before:mr-2 before:inline-block before:rotate-90 before:content-['▶'] after:absolute  after:-bottom-1/4 after:left-1/2 after:block after:h-[3px] after:w-0 after:bg-slate-800 after:transition-all after:duration-300  group-hover:after:left-0 group-hover:after:right-0 group-hover:after:w-full text-black">
                     products
-                  </p>
+                  </span>
 
                   <div className={`w-full flex-col divide-y-[1px] rounded-lg bg-white pt-2 md:absolute md:left-0  md:top-full md:hidden md:w-full md:py-2 md:shadow-lg md:group-hover:flex ${showProductCategories ? "flex" : "hidden"}`}>
                     {productCategories.map((category, index) => {
                       return (
                         <Link href={`/product-category/${category}`} passHref key={index}>
-                          <div className="py-2 capitalize hover:underline md:flex md:w-full md:justify-center md:px-4" onClick={() => setNavActive((prev) => !prev)}>
+                          <div className="py-2 capitalize hover:underline md:flex md:w-full md:justify-center md:px-4 text-black" onClick={() => setNavActive((prev) => !prev)}>
                             {category}
                           </div>
                         </Link>
