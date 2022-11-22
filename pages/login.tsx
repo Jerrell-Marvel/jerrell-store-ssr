@@ -4,13 +4,20 @@ import { useEffect, useState } from "react";
 // import matchRegex from "../../utils/matchRegex";
 // import LoadingSpinner from "../../components/LoadingSpinner/LoadingSpinner";
 // import { useUserContext } from "../../context/UserContext";
-import { useQueryClient } from "react-query";
+import { useMutation, useQueryClient } from "react-query";
 import Link from "next/link";
+import axios from "axios";
+import matchRegex from "../utils/matchRegex";
 
 type LoginApiResponse = {
   username: string;
   token: string;
   cartCount: number;
+};
+
+type MutationFnPrams = {
+  email: string;
+  password: string;
 };
 
 function Login() {
@@ -20,8 +27,35 @@ function Login() {
   const [emailErrorMessage, setEmailErrorMessage] = useState("");
   const [passwordErrorMessage, setPasswordErrorMessage] = useState("");
   //   const queryClient = useQueryClient();
+  const queryClient = useQueryClient();
 
   //   const navigate = useNavigate();
+
+  const {
+    data,
+    isLoading,
+    error,
+    mutate: sendLoginRequest,
+  } = useMutation<LoginApiResponse, any, MutationFnPrams>({
+    mutationFn: async ({ email, password }) => {
+      const response = await axios.post("http://localhost:5000/api/v1/auth/login", { email, password });
+
+      const data = response.data as LoginApiResponse;
+      return data;
+    },
+    onSuccess: (response) => {
+      queryClient.setQueryData(["profile"], { username: response.username, cartCount: response.cartCount });
+    },
+    onError: (error) => {
+      if (error.response.data.message === "incorrect password") {
+        setPasswordErrorMessage("Incorrect password");
+      } else if (error.response.data.message === "email is not registered") {
+        setEmailErrorMessage("Email is not registered");
+      } else {
+        setErrorMessage("Something went wrong please try again later");
+      }
+    },
+  });
 
   //   const {
   //     data: response,
@@ -71,22 +105,20 @@ function Login() {
   //   }
   // }, [response, error]);
 
-  //   const handleSubmit = () => {
-  //     if (!email || !password) {
-  //       setErrorMessage("Please fill value for each field");
-  //     }
-  //     const isMatch = matchRegex(email, /^(([^<>()[\]\.,;:\s@\"]+(\.[^<>()[\]\.,;:\s@\"]+)*)|(\".+\"))@(([^<>()[\]\.,;:\s@\"]+\.)+[^<>()[\]\.,;:\s@\"]{2,})$/i);
-  //     if (isMatch) {
-  //       sendRequest({
-  //         body: {
-  //           email,
-  //           password,
-  //         },
-  //       });
-  //     } else {
-  //       setEmailErrorMessage("Please provide valid email");
-  //     }
-  //   };
+  const handleSubmit = () => {
+    if (!email || !password) {
+      setErrorMessage("Please fill value for each field");
+    }
+    const isMatch = matchRegex(email, /^(([^<>()[\]\.,;:\s@\"]+(\.[^<>()[\]\.,;:\s@\"]+)*)|(\".+\"))@(([^<>()[\]\.,;:\s@\"]+\.)+[^<>()[\]\.,;:\s@\"]{2,})$/i);
+    if (isMatch) {
+      sendLoginRequest({
+        email,
+        password,
+      });
+    } else {
+      setEmailErrorMessage("Please provide valid email");
+    }
+  };
 
   return (
     <div className="bg-slate-200 pt-28 pb-8">
@@ -95,7 +127,7 @@ function Login() {
         className="mx-auto w-full rounded-lg bg-white p-8 shadow-xl md:w-[576px]"
         onSubmit={(e) => {
           e.preventDefault();
-          //   handleSubmit();
+          handleSubmit();
         }}
       >
         <div className="flex flex-col gap-6">
