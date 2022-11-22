@@ -1,7 +1,9 @@
+import axios from "axios";
 import { NextPage } from "next";
 import Link from "next/link";
 import { useRouter } from "next/router";
 import { useState } from "react";
+import { useQuery } from "react-query";
 import NavCart from "./NavCart";
 // import { useEffect, useState } from "react";
 // import { useEffect, useState } from "react";
@@ -16,7 +18,7 @@ type LogoutApiResponse = {
   success: boolean;
 };
 
-export type UserApiResponseType = {
+export type UserType = {
   username: string;
   cartCount: number;
 };
@@ -39,6 +41,16 @@ const Navbar = () => {
     setSearch("");
     // navigate(`/search?q=${search}&sort=newest`);
   };
+
+  const { data, isLoading, error } = useQuery<UserType, any>({
+    queryKey: ["profile"],
+    queryFn: async () => {
+      const response = await axios.get("http://localhost:5000/api/v1/auth/profile");
+      const data = (await response.data.json()) as UserType;
+      return data;
+    },
+    retry: false,
+  });
 
   // const { data, isLoading, error, isError } = useFetch<UserApiResponseType>({
   //   url: "/api/v1/auth/profile",
@@ -137,15 +149,7 @@ const Navbar = () => {
                 </div>
               </li>
 
-              <NavCart
-                amount={
-                  // queryClient.getQueryData<{
-                  // username: string;
-                  // cartCount: number;
-                  // }>(["profile"])?.cartCount
-                  1
-                }
-              />
+              <NavCart amount={data?.cartCount} />
 
               <li>
                 {/* {data ? (
@@ -162,11 +166,24 @@ const Navbar = () => {
                     <Button>Login</Button>
                   </NavLink>
                 )} */}
-                <Link href="/login" passHref>
+                {data ? (
+                  <Link href="/logout" passHref>
+                    <div className="z-10 block py-3 pl-6 md:py-0 md:pl-0">
+                      <button className="w-fit rounded-md border-2 border-black bg-primary py-2 px-6 text-white transition duration-200 ease-in-out hover:bg-white hover:text-primary">Logout</button>
+                    </div>
+                  </Link>
+                ) : (
+                  <Link href="/login" passHref>
+                    <div className="z-10 block py-3 pl-6 md:py-0 md:pl-0">
+                      <button className="w-fit rounded-md border-2 border-black bg-primary py-2 px-6 text-white transition duration-200 ease-in-out hover:bg-white hover:text-primary">Login</button>
+                    </div>
+                  </Link>
+                )}
+                {/* <Link href="/login" passHref>
                   <div className="z-10 block py-3 pl-6 md:py-0 md:pl-0">
                     <button className="w-fit rounded-md border-2 border-black bg-primary py-2 px-6 text-white transition duration-200 ease-in-out hover:bg-white hover:text-primary">Login</button>
                   </div>
-                </Link>
+                </Link> */}
               </li>
             </ul>
           </nav>
