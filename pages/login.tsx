@@ -47,9 +47,9 @@ function Login() {
       queryClient.setQueryData(["profile"], { username: response.username, cartCount: response.cartCount });
     },
     onError: (error) => {
-      if (error.response.data.message === "incorrect password") {
+      if (error?.response?.data?.message === "incorrect password") {
         setPasswordErrorMessage("Incorrect password");
-      } else if (error.response.data.message === "email is not registered") {
+      } else if (error?.response?.data?.message === "email is not registered") {
         setEmailErrorMessage("Email is not registered");
       } else {
         setErrorMessage("Something went wrong please try again later");
