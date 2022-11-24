@@ -1,5 +1,7 @@
+import axios from "axios";
 import { NextPage } from "next";
 import { useState } from "react";
+import { useMutation } from "react-query";
 // import { useNavigate } from "react-router-dom";
 // import useApi from "../../customHooks/useApi2";
 // import matchRegex from "../../utils/matchRegex";
@@ -24,7 +26,47 @@ const Register: NextPage = () => {
   const [errorMessage, setErrorMessage] = useState("");
 
   const [emailErrorMessage, setEmailErrorMessage] = useState("");
+  type RegisterApiResponse = {
+    username: string;
+    email: string;
+    password: string;
+  };
 
+  type SendRegisterParams = {
+    username: string;
+    email: string;
+    password: string;
+  };
+
+  const {
+    data,
+    isLoading,
+    error,
+    mutate: sendRegisterRequest,
+  } = useMutation<RegisterApiResponse, any, SendRegisterParams>({
+    mutationFn: async ({ username, email, password }) => {
+      const response = await axios.post("http://localhost:5000/api/v1/auth/register", { username, email, password });
+      const data = response.data as RegisterApiResponse;
+      return data;
+    },
+    onError: (error) => {
+      if (error.code !== "ERR_NETWORK") {
+        if (error.response.data.name === "ValidationError") {
+          console.log(error.response);
+          setErrorMessage("Please provide information");
+        }
+        if (error.response.data.name === "MongoServerError") {
+          setEmailErrorMessage("Email is already registered");
+        }
+      } else if (error.code === "ERR_NETWORK") {
+        setEmailErrorMessage("");
+        setErrorMessage("Something went wrong please try again later");
+      } else {
+        setEmailErrorMessage("");
+        setErrorMessage("Something went wrong please try again later");
+      }
+    },
+  });
   //   const navigate = useNavigate();
 
   //   const {
@@ -110,7 +152,7 @@ const Register: NextPage = () => {
           className="mx-auto w-full rounded-lg bg-white p-8 shadow-xl md:w-[576px]"
           onSubmit={(e) => {
             e.preventDefault();
-            // handleSubmit();
+            sendRegisterRequest({ username, email, password });
           }}
         >
           <div className="flex flex-col gap-6">
