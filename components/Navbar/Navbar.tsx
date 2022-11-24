@@ -45,8 +45,8 @@ const Navbar = () => {
   const { data, isLoading, error } = useQuery<UserType, any>({
     queryKey: ["profile"],
     queryFn: async () => {
-      const response = await axios.get("http://localhost:5000/api/v1/auth/profile");
-      const data = (await response.data.json()) as UserType;
+      const response = await axios.get("http://localhost:5000/api/v1/auth/profile", { withCredentials: true });
+      const data = response.data as UserType;
       return data;
     },
     retry: false,

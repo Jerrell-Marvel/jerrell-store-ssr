@@ -1,3 +1,4 @@
+import axios from "axios";
 import type { GetServerSideProps, NextPage } from "next";
 import Head from "next/head";
 import Image from "next/image";
@@ -47,8 +48,8 @@ type HomeProps = {
 
 export const getServerSideProps: GetServerSideProps<HomeProps> = async () => {
   try {
-    const response = await fetch("http://localhost:5000/api/v1/products?sort=newest");
-    const data = (await response.json()) as HomeProps["carouselProducts"];
+    const response = await axios.get("http://localhost:5000/api/v1/products?sort=newest");
+    const data = response.data as HomeProps["carouselProducts"];
     return {
       props: {
         carouselProducts: data,
