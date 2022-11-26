@@ -2,6 +2,8 @@ import { GetServerSideProps, NextPage } from "next";
 import axios from "axios";
 import { useState } from "react";
 import Image from "next/image";
+import { useMutation, useQueryClient } from "react-query";
+import { useRouter } from "next/router";
 
 type ProductDetailsProps = {
   data: {
@@ -22,12 +24,54 @@ type ProductDetailsProps = {
 };
 
 const ProductDetails: NextPage<ProductDetailsProps> = ({ data }) => {
+  const router = useRouter();
+  const { productId } = router.query;
+  const queryClient = useQueryClient();
   const [productAmount, setProductAmount] = useState(1);
   const incrementAmount = () => {
     setProductAmount((prevAmount) => prevAmount + 1);
   };
   const decrementAmount = () => {
     setProductAmount((prevAmount) => prevAmount - 1);
+  };
+
+  const [wishlistErrMsg, setWishlistErrMsg] = useState("");
+
+  const {
+    data: addwishlistResponse,
+    isError: addWishlistError,
+    isLoading: addWishlistLoading,
+    mutate: sendAddWishlistRequest,
+  } = useMutation<any, any, string | undefined>({
+    mutationFn: async (productId) => {
+      const response = await axios.post("http://localhost:5000/api/v1/wishlist", { productId }, { withCredentials: true });
+      const data = response.data;
+      return data;
+    },
+    onSuccess: () => {
+      // setIsWishlistModalActive((prev) => !prev);
+      setWishlistErrMsg("");
+    },
+    onError: (addWishlistError) => {
+      // if (addWishlistError.code === "ERR_NETWORK") {
+      //   setWishlistErrMsg("Something went wrong please try again later");
+      // } else
+
+      if (addWishlistError?.response?.data?.message === "Duplicate value error") {
+        setWishlistErrMsg("Item is already in wishlist");
+      } else {
+        setWishlistErrMsg("Something went wrong please try again later");
+      }
+    },
+  });
+
+  const addToWishlistHandler = () => {
+    const isLoggedIn = queryClient.getQueryData(["profile"]);
+    if (isLoggedIn) {
+      sendAddWishlistRequest(productId as string);
+    } else {
+      // navigate("/login");
+    }
   };
 
   return (
@@ -61,12 +105,32 @@ const ProductDetails: NextPage<ProductDetailsProps> = ({ data }) => {
 
           <button
             className="mt-4 flex h-14 w-full items-center justify-center border-2 border-black bg-white uppercase text-primary transition-colors duration-300"
-            // onClick={() => {
-            //   addToWishlistHandler();
-            // }}
+            onClick={() => {
+              addToWishlistHandler();
+            }}
           >
             add to wishlist
           </button>
+
+          {wishlistErrMsg ? (
+            <span className="!mt-2 block text-red-500">
+              {wishlistErrMsg}
+              {/* <Link to="/wishlist" className="text-black underline">
+                click here
+              </Link>{" "}
+              to check */}
+            </span>
+          ) : (
+            ""
+          )}
+
+          {/* <span className="!mt-2 block text-red-500">
+                  Item is already in wishlist{" "}
+                  <Link to="/wishlist" className="text-black underline">
+                    click here
+                  </Link>{" "}
+                  to check
+                </span> */}
         </div>
       </div>
     </section>
