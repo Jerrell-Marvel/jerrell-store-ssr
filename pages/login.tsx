@@ -38,7 +38,7 @@ function Login() {
     mutate: sendLoginRequest,
   } = useMutation<LoginApiResponse, any, MutationFnPrams>({
     mutationFn: async ({ email, password }) => {
-      const response = await axios.post("http://localhost:5000/api/v1/auth/login", { email, password });
+      const response = await axios.post("http://localhost:5000/api/v1/auth/login", { email, password }, { withCredentials: true });
 
       const data = response.data as LoginApiResponse;
       return data;
