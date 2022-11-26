@@ -3,7 +3,7 @@ import { NextPage } from "next";
 import Link from "next/link";
 import { useRouter } from "next/router";
 import { useState } from "react";
-import { useQuery } from "react-query";
+import { useMutation, useQuery, useQueryClient } from "react-query";
 import NavCart from "./NavCart";
 // import { useEffect, useState } from "react";
 // import { useEffect, useState } from "react";
@@ -30,7 +30,7 @@ const Navbar = () => {
   const [navActive, setNavActive] = useState(false);
   const [showProductCategories, setShowProductCategories] = useState(false);
   const [search, setSearch] = useState("");
-  // const queryClient = useQueryClient();
+  const queryClient = useQueryClient();
 
   const onChangeHandler = (e: React.ChangeEvent<HTMLInputElement>) => {
     setSearch(e.target.value);
@@ -50,6 +50,38 @@ const Navbar = () => {
       return data;
     },
     retry: false,
+  });
+
+  const {
+    data: logoutResponse,
+    isLoading: logoutLoading,
+    error: logoutError,
+    isError: isLogourError,
+    mutate: sendLogoutRequest,
+  } = useMutation<LogoutApiResponse, any, {}>({
+    mutationFn: async () => {
+      const response = await axios.post("http://localhost:5000/api/v1/auth/logout", {}, { withCredentials: true });
+      const data = response.data as LogoutApiResponse;
+      return data;
+    },
+    onSuccess: () => {
+      queryClient.setQueryData(["profile"], undefined);
+      window.location.reload();
+    },
+    onError: () => {
+      alert("Something went wrong please try again later");
+    },
+    // url: "/api/v1/auth/logout",
+    // method: "post",
+    // options: {
+    //   onSuccess: () => {
+    //     queryClient.setQueryData(["profile"], undefined);
+    //     window.location.reload();
+    //   },
+    //   onError: () => {
+    //     alert("Something went wrong please try again later");
+    //   },
+    // },
   });
 
   // const { data, isLoading, error, isError } = useFetch<UserApiResponseType>({
@@ -167,11 +199,14 @@ const Navbar = () => {
                   </NavLink>
                 )} */}
                 {data ? (
-                  <Link href="/logout" passHref>
-                    <div className="z-10 block py-3 pl-6 md:py-0 md:pl-0">
-                      <button className="w-fit rounded-md border-2 border-black bg-primary py-2 px-6 text-white transition duration-200 ease-in-out hover:bg-white hover:text-primary">Logout</button>
-                    </div>
-                  </Link>
+                  <div
+                    className="z-10 block py-3 pl-6 md:py-0 md:pl-0"
+                    onClick={() => {
+                      sendLogoutRequest({});
+                    }}
+                  >
+                    <button className="w-fit rounded-md border-2 border-black bg-primary py-2 px-6 text-white transition duration-200 ease-in-out hover:bg-white hover:text-primary">Logout</button>
+                  </div>
                 ) : (
                   <Link href="/login" passHref>
                     <div className="z-10 block py-3 pl-6 md:py-0 md:pl-0">
