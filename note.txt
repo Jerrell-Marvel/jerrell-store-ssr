@@ -1,0 +1,2 @@
+Todo : 
+1. Create loading animation when adding wishlist, login, register, remove wishlist

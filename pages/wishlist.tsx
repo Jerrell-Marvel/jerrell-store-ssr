@@ -2,7 +2,7 @@ import axios from "axios";
 import { NextPage } from "next";
 import Link from "next/link";
 import { useState } from "react";
-import { useQuery, useQueryClient } from "react-query";
+import { useMutation, useQuery, useQueryClient } from "react-query";
 type WishlistType = {
   _id: string;
   product: {
@@ -85,6 +85,36 @@ const Wishlist: NextPage = () => {
   //   }
   // }, []);
 
+  const {
+    data: deleteResponse,
+    isLoading: deleteLoading,
+    error: deleteError,
+    isError: isDeleteError,
+    mutate: sendDeleteRequest,
+  } = useMutation<any, any, string>({
+    mutationFn: async (productId) => {
+      const response = await axios.delete(`http://localhost:5000/api/v1/wishlist/${productId}`, { withCredentials: true });
+      const data = response.data;
+      return data;
+    },
+    onSuccess: (deleteWishlistResponse) => {
+      queryClient.setQueryData<WishlistApiResponseType | undefined>(["wishlist"], (oldWishlist) => {
+        if (oldWishlist) {
+          const deletedWishlist = oldWishlist?.wishlists.filter((wishlist) => {
+            return wishlist._id !== deleteWishlistResponse.wishlist._id;
+          });
+
+          return {
+            ...oldWishlist,
+            wishlists: deletedWishlist,
+            count: deletedWishlist.length,
+          };
+        }
+        return oldWishlist;
+      });
+    },
+  });
+
   //   const {
   //     data: deleteWishlistResponse,
   //     isLoading: deleteWishlistLoading,
@@ -128,6 +158,7 @@ const Wishlist: NextPage = () => {
   const removeWishlistHandler = (id: string) => {
     alert("are you sure to remove item from wishlist?");
     // sendDeleteWishlistRequest({ itemId: id });
+    sendDeleteRequest(id);
   };
 
   return (
