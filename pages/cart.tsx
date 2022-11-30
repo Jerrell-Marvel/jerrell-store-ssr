@@ -2,7 +2,8 @@ import axios from "axios";
 import { NextPage } from "next";
 import Link from "next/link";
 import { useState } from "react";
-import { useQuery, useQueryClient } from "react-query";
+import { useMutation, useQuery, useQueryClient } from "react-query";
+import { UserType } from "../components/Navbar/Navbar";
 
 type CartType = {
   _id: string;
@@ -50,6 +51,45 @@ const Cart: NextPage = () => {
       } else {
         setFetchErrorMessage("Something went wrong please try again");
       }
+    },
+  });
+
+  const {
+    data: deleteCartResponse,
+    isLoading: deleteCartLoading,
+    error: deleteCartError,
+    isError: isDeleteCartError,
+    mutate: sendDeleteCartRequest,
+  } = useMutation<any, any, string>({
+    mutationFn: async (productId) => {
+      const response = await axios.delete(`http://localhost:5000/api/v1/cart/${productId}`, { withCredentials: true });
+      const data = response.data;
+      return data;
+    },
+
+    onSuccess: (deleteCartResponse) => {
+      queryClient.setQueryData<CartApiResponseType | undefined>(["cart"], (oldCart) => {
+        if (oldCart) {
+          const deletedCart = oldCart?.items.filter((item) => {
+            return item._id !== deleteCartResponse.item._id;
+          });
+          return {
+            ...oldCart,
+            items: deletedCart,
+            count: deletedCart.length,
+          };
+        }
+        return oldCart;
+      });
+      queryClient.setQueryData<UserType | undefined>(["profile"], (oldProfile) => {
+        if (oldProfile) {
+          return {
+            ...oldProfile,
+            cartCount: oldProfile.cartCount - 1,
+          };
+        }
+        return oldProfile;
+      });
     },
   });
   return (
@@ -113,6 +153,7 @@ const Cart: NextPage = () => {
                         className="h-10 w-20 border-2 border-black bg-white py-2 px-3 text-sm uppercase text-black transition-colors duration-300  hover:bg-slate-100"
                         onClick={() => {
                           // removeWishlistHandler(item._id);
+                          sendDeleteCartRequest(item._id);
                         }}
                       >
                         {/* {deleteCartLoading ? <LoadingSpinner color="primary" height="h-4" width="w-4" /> : "remove"} */}
