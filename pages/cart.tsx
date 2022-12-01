@@ -27,6 +27,19 @@ type CartApiResponseType = {
   items: CartType[];
 };
 
+type UpdateCartApiResponseType = {
+  success: boolean;
+  item: {
+    createdAt: string;
+    createdBy: string;
+    product: string;
+    updatedAt: string;
+    __v: 0;
+    _id: string;
+    quantity: string;
+  };
+};
+
 const Cart: NextPage = () => {
   const [fetchErrorMessage, setFetchErrorMessage] = useState("");
   const queryClient = useQueryClient();
@@ -92,6 +105,67 @@ const Cart: NextPage = () => {
       });
     },
   });
+
+  const {
+    data: updateCartResponse,
+    isLoading: updateCartLoading,
+    error: updateCartError,
+    mutate: sendUpdateCartRequest,
+    isError: isUpdateCartError,
+  } = useMutation<UpdateCartApiResponseType, any, { productId: string; quantity: string }>({
+    // url: `/api/v1/cart`,
+    // method: "patch",
+    mutationFn: async ({ productId, quantity }) => {
+      const response = await axios.patch(`http://localhost:5000/api/v1/cart/${productId}`, { quantity }, { withCredentials: true });
+      const data = response.data as UpdateCartApiResponseType;
+
+      return data;
+    },
+
+    onMutate: async (newCart) => {
+      await queryClient.cancelQueries(["cart"]);
+      const previousCartData = queryClient.getQueryData<CartApiResponseType>(["cart"]);
+
+      if (previousCartData) {
+        queryClient.setQueryData<CartApiResponseType | undefined>(["cart"], (oldQueryData) => {
+          if (oldQueryData) {
+            const updatedCart = oldQueryData.items.map((cart) => {
+              if (cart._id === newCart.productId) {
+                return {
+                  ...cart,
+                  quantity: newCart.quantity,
+                };
+              } else {
+                return cart;
+              }
+            });
+
+            return {
+              success: true,
+              items: updatedCart,
+            };
+          }
+        });
+      }
+
+      return { previousCartData };
+    },
+
+    onError: (_err, _newTodo, context: any) => {
+      queryClient.setQueryData(["cart"], context.previousCartData);
+    },
+    onSettled: () => {
+      queryClient.invalidateQueries(["cart"]);
+    },
+  });
+
+  const changeQuantityHandler = (id: string, quantity: string) => {
+    if (Number(quantity) < 1) {
+      return;
+    }
+    sendUpdateCartRequest({ productId: id, quantity });
+  };
+
   return (
     <>
       <div className="pt-20 text-center">
@@ -130,8 +204,8 @@ const Cart: NextPage = () => {
                         <button
                           className="px-4 py-2 pl-0 text-2xl"
                           onClick={() => {
-                            // const updatedQuantity = Number(item.quantity) - 1;
-                            // changeQuantityHandler(item._id, { quantity: updatedQuantity.toString() });
+                            const updatedQuantity = Number(item.quantity) - 1;
+                            changeQuantityHandler(item._id, updatedQuantity.toString());
                           }}
                         >
                           -
@@ -143,6 +217,8 @@ const Cart: NextPage = () => {
                           onClick={() => {
                             // const updatedQuantity = Number(item.quantity) + 1;
                             // changeQuantityHandler(item._id, { quantity: updatedQuantity.toString() });
+                            const updatedQuantity = Number(item.quantity) + 1;
+                            changeQuantityHandler(item._id, updatedQuantity.toString());
                           }}
                         >
                           +
