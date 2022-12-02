@@ -6,6 +6,7 @@ import { useMutation, useQueryClient } from "react-query";
 import { useRouter } from "next/router";
 import { UserType } from "../../components/Navbar/Navbar";
 import LoadingSpinner from "../../components/Spinner/LoadingSpinner";
+import Link from "next/link";
 
 type ProductDetailsProps = {
   data: {
@@ -44,6 +45,9 @@ const ProductDetails: NextPage<ProductDetailsProps> = ({ data }) => {
     setProductAmount((prevAmount) => prevAmount - 1);
   };
 
+  //Modal state
+  const [activeModal, setActiveModal] = useState("");
+
   //Error state
   const [wishlistErrMsg, setWishlistErrMsg] = useState("");
   const [cartErrMsg, setCartErrMsg] = useState("");
@@ -61,6 +65,7 @@ const ProductDetails: NextPage<ProductDetailsProps> = ({ data }) => {
     },
     onSuccess: () => {
       // setIsWishlistModalActive((prev) => !prev);
+      setActiveModal("wishlist");
       setWishlistErrMsg("");
     },
     onError: (addWishlistError) => {
@@ -110,6 +115,7 @@ const ProductDetails: NextPage<ProductDetailsProps> = ({ data }) => {
 
       setProductAmount(1);
       // setIsCartModalActive((prev) => !prev);
+      setActiveModal("cart");
       setCartErrMsg("");
     },
     onError: (addCartError) => {
@@ -128,76 +134,106 @@ const ProductDetails: NextPage<ProductDetailsProps> = ({ data }) => {
   };
 
   return (
-    <section className="bg-slate-50 px-6 pt-20 pb-6">
-      <div className="flex flex-wrap">
-        <div className="w-full md:w-1/2">
-          <Image src={"https://source.unsplash.com/random/800x600"} alt="temporary alt" layout="responsive" width="4" height="3" />
-        </div>
-
-        <div className="w-full md:w-1/2 md:pl-8">
-          <h2 className="mb-4 mt-8 text-2xl font-medium uppercase md:mt-0 lg:text-4xl">{data.product.name}</h2>
-          <h4 className="font-primary font-semibold uppercase md:text-lg lg:text-xl">description</h4>
-          <p>{data.product.description}</p>
-          <div className="mt-4 flex w-fit border-2">
-            <button className="px-4 py-2 text-2xl" onClick={decrementAmount}>
-              -
-            </button>
-            <div className="flex items-center px-4 py-2 text-lg">{productAmount}</div>
-            <button className="px-4 py-2" onClick={incrementAmount}>
-              +
-            </button>
+    <>
+      <section className="bg-slate-50 px-6 pt-20 pb-6">
+        <div className="flex flex-wrap">
+          <div className="w-full md:w-1/2">
+            <Image src={"https://source.unsplash.com/random/800x600"} alt="temporary alt" layout="responsive" width="4" height="3" />
           </div>
-          <button
-            className="mt-4 flex h-14 w-full items-center justify-center border-2 border-black bg-primary uppercase text-white transition-colors duration-300"
-            onClick={() => {
-              addToCartHandler();
-            }}
-          >
-            {addCartLoading ? <LoadingSpinner color="white" /> : "add to cart"}
-          </button>
-          {cartErrMsg ? (
-            <span className="!mt-2 block text-red-500">
-              Item is already in cart
-              {/* <Link to="/cart" className="text-black underline">
+
+          <div className="w-full md:w-1/2 md:pl-8">
+            <h2 className="mb-4 mt-8 text-2xl font-medium uppercase md:mt-0 lg:text-4xl">{data.product.name}</h2>
+            <h4 className="font-primary font-semibold uppercase md:text-lg lg:text-xl">description</h4>
+            <p>{data.product.description}</p>
+            <div className="mt-4 flex w-fit border-2">
+              <button className="px-4 py-2 text-2xl" onClick={decrementAmount}>
+                -
+              </button>
+              <div className="flex items-center px-4 py-2 text-lg">{productAmount}</div>
+              <button className="px-4 py-2" onClick={incrementAmount}>
+                +
+              </button>
+            </div>
+            <button
+              className="mt-4 flex h-14 w-full items-center justify-center border-2 border-black bg-primary uppercase text-white transition-colors duration-300"
+              onClick={() => {
+                addToCartHandler();
+              }}
+            >
+              {addCartLoading ? <LoadingSpinner color="white" /> : "add to cart"}
+            </button>
+            {cartErrMsg ? (
+              <span className="!mt-2 block text-red-500">
+                Item is already in cart
+                {/* <Link to="/cart" className="text-black underline">
                 click here
               </Link>{" "}
               to check */}
-            </span>
-          ) : (
-            ""
-          )}
+              </span>
+            ) : (
+              ""
+            )}
 
-          <button
-            className="mt-4 flex h-14 w-full items-center justify-center border-2 border-black bg-white uppercase text-primary transition-colors duration-300"
-            onClick={() => {
-              addToWishlistHandler();
-            }}
-          >
-            {addWishlistLoading ? <LoadingSpinner color="primary" /> : "add to wishlist"}
-          </button>
+            <button
+              className="mt-4 flex h-14 w-full items-center justify-center border-2 border-black bg-white uppercase text-primary transition-colors duration-300"
+              onClick={() => {
+                addToWishlistHandler();
+              }}
+            >
+              {addWishlistLoading ? <LoadingSpinner color="primary" /> : "add to wishlist"}
+            </button>
 
-          {wishlistErrMsg ? (
-            <span className="!mt-2 block text-red-500">
-              {wishlistErrMsg}
-              {/* <Link to="/wishlist" className="text-black underline">
+            {wishlistErrMsg ? (
+              <span className="!mt-2 block text-red-500">
+                {wishlistErrMsg}
+                {/* <Link to="/wishlist" className="text-black underline">
                 click here
               </Link>{" "}
               to check */}
-            </span>
-          ) : (
-            ""
-          )}
+              </span>
+            ) : (
+              ""
+            )}
 
-          {/* <span className="!mt-2 block text-red-500">
+            {/* <span className="!mt-2 block text-red-500">
                   Item is already in wishlist{" "}
                   <Link to="/wishlist" className="text-black underline">
                     click here
                   </Link>{" "}
                   to check
                 </span> */}
+          </div>
         </div>
-      </div>
-    </section>
+      </section>
+      {activeModal ? (
+        <div>
+          <div className="fixed left-0 right-0 bottom-0 top-0 z-10 bg-black opacity-40"></div>
+          <div className="fixed left-0 right-0 bottom-0 top-0 z-20 pt-20">
+            <div className="absolute top-1/2 left-1/2 w-[80%] -translate-x-1/2 -translate-y-1/2 rounded-md bg-white p-6 lg:w-1/2">
+              <h4 className="mb-2 text-3xl font-medium uppercase">successfully added</h4>
+              <span>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Totam, rem. Lorem ipsum dolor sit amet consectetur adipisicing elit. Corrupti, dolor.</span>
+
+              <div className="mt-4 flex gap-4">
+                <button
+                  onClick={() => {
+                    setActiveModal("");
+                    // setIsWishlistModalActive((prev) => !prev);
+                  }}
+                  className="w-fit border-2 border-black bg-white py-2 px-4 text-sm uppercase text-black transition-colors duration-300 hover:bg-slate-100"
+                >
+                  ADD MORE
+                </button>
+                <Link href={`/${activeModal}`}>
+                  <a className="w-fit border-2 border-black bg-primary px-4 py-2 text-sm uppercase text-white transition-colors duration-300 block"> {`${activeModal} page`}</a>
+                </Link>
+              </div>
+            </div>
+          </div>
+        </div>
+      ) : (
+        ""
+      )}
+    </>
   );
 };
 
