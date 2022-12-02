@@ -5,6 +5,7 @@ import Image from "next/image";
 import { useMutation, useQueryClient } from "react-query";
 import { useRouter } from "next/router";
 import { UserType } from "../../components/Navbar/Navbar";
+import LoadingSpinner from "../../components/Spinner/LoadingSpinner";
 
 type ProductDetailsProps = {
   data: {
@@ -152,7 +153,7 @@ const ProductDetails: NextPage<ProductDetailsProps> = ({ data }) => {
               addToCartHandler();
             }}
           >
-            add to cart
+            {addCartLoading ? <LoadingSpinner color="white" /> : "add to cart"}
           </button>
           {cartErrMsg ? (
             <span className="!mt-2 block text-red-500">
@@ -172,7 +173,7 @@ const ProductDetails: NextPage<ProductDetailsProps> = ({ data }) => {
               addToWishlistHandler();
             }}
           >
-            add to wishlist
+            {addWishlistLoading ? <LoadingSpinner color="primary" /> : "add to wishlist"}
           </button>
 
           {wishlistErrMsg ? (
