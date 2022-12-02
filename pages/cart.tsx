@@ -4,6 +4,7 @@ import Link from "next/link";
 import { useState } from "react";
 import { useMutation, useQuery, useQueryClient } from "react-query";
 import { UserType } from "../components/Navbar/Navbar";
+import LoadingSpinner from "../components/Spinner/LoadingSpinner";
 
 type CartType = {
   _id: string;
@@ -65,6 +66,7 @@ const Cart: NextPage = () => {
         setFetchErrorMessage("Something went wrong please try again");
       }
     },
+    retry: false,
   });
 
   const {
@@ -173,8 +175,7 @@ const Cart: NextPage = () => {
         <div className="bg-slate-100 p-4 text-center ">
           {!isFetchError ? (
             fetchLoading ? (
-              // <LoadingSpinner color="primary" />
-              "loading"
+              <LoadingSpinner color="black" />
             ) : (
               <div>
                 <h3 className="my-4 text-3xl font-medium">My Cart</h3>
@@ -232,8 +233,7 @@ const Cart: NextPage = () => {
                           sendDeleteCartRequest(item._id);
                         }}
                       >
-                        {/* {deleteCartLoading ? <LoadingSpinner color="primary" height="h-4" width="w-4" /> : "remove"} */}
-                        remove
+                        {deleteCartLoading ? <LoadingSpinner color="black" height="h-4" width="w-4" /> : "remove"}
                       </button>
                     </div>
                   </div>
