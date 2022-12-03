@@ -30,10 +30,12 @@ export type SearchProps = {
 const Search: NextPage<SearchProps> = ({ data }) => {
   const router = useRouter();
   return (
-    <div className="bg-slate-100 px-6 py-10">
-      <SortProductsDropdown />
-      <ShowProducts data={data} />
-      <Pagination pageCount={Math.ceil(data.totalCount / 10)} activePage={Number(router.query.page) || 1} />
+    <div className="bg-slate-200 pt-20 pb-8">
+      <div className="bg-slate-100 px-6 py-10">
+        <SortProductsDropdown />
+        <ShowProducts data={data} />
+        <Pagination pageCount={Math.ceil(data.totalCount / 10)} activePage={Number(router.query.page) || 1} />
+      </div>
     </div>
   );
 };

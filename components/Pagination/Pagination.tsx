@@ -10,6 +10,7 @@ export default function Pagination({ pageCount, activePage }: PaginationPropsTyp
   const router = useRouter();
   const path = router.asPath.split("?")[0];
   const queryString = router.asPath.split("?")[1];
+  const { q, sort, page } = router.query;
 
   if (pageCount < 1) {
     return null;
@@ -22,7 +23,7 @@ export default function Pagination({ pageCount, activePage }: PaginationPropsTyp
             className="px-2 py-1 md:px-6 md:py-3"
             onClick={() => {
               if (activePage - 1 >= 1) {
-                router.push(`${path}?sort=${router.query.sort || "newest"}&page=${activePage - 1}`);
+                router.push(`${path}?${q ? `q=${q}&` : ""}sort=${sort || "newest"}&page=${activePage - 1}`);
               }
             }}
           >
@@ -34,7 +35,7 @@ export default function Pagination({ pageCount, activePage }: PaginationPropsTyp
                 <div
                   onClick={() => {
                     if (Number(router.query.page) !== index + 1) {
-                      router.push(`${path}?sort=${router.query.sort || "newest"}&page=${index + 1}`);
+                      router.push(`${path}?${q ? `q=${q}&` : ""}sort=${sort || "newest"}&page=${index + 1}`);
                     }
                   }}
                   key={index}
@@ -51,7 +52,7 @@ export default function Pagination({ pageCount, activePage }: PaginationPropsTyp
             onClick={() => {
               console.log(pageCount);
               if (activePage + 1 <= pageCount) {
-                router.push(`${path}?sort=${router.query.sort || "newest"}&page=${activePage + 1}`);
+                router.push(`${path}?${q ? `q=${q}&` : ""}sort=${sort || "newest"}&page=${activePage + 1}`);
               }
             }}
           >
