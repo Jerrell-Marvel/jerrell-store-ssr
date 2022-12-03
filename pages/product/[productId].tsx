@@ -86,7 +86,7 @@ const ProductDetails: NextPage<ProductDetailsProps> = ({ data }) => {
     if (isLoggedIn) {
       sendAddWishlistRequest(productId as string);
     } else {
-      // navigate("/login");
+      router.push("/login");
     }
   };
 
@@ -119,6 +119,7 @@ const ProductDetails: NextPage<ProductDetailsProps> = ({ data }) => {
       setCartErrMsg("");
     },
     onError: (addCartError) => {
+      console.log(addCartError?.response?.data?.message);
       if (addCartError?.response?.data?.message === "Duplicate value error") {
         setCartErrMsg("Item is already in Cart");
       } else {
@@ -129,8 +130,13 @@ const ProductDetails: NextPage<ProductDetailsProps> = ({ data }) => {
 
   const addToCartHandler = () => {
     setCartErrMsg("");
-    const tempProductId = productId as string;
-    sendAddCartRequest({ productId: tempProductId, quantity: productAmount.toString() });
+
+    const isLoggedIn = queryClient.getQueryData(["profile"]);
+    if (isLoggedIn) {
+      sendAddCartRequest({ productId: productId as string, quantity: productAmount.toString() });
+    } else {
+      router.push("/login");
+    }
   };
 
   return (
@@ -164,7 +170,7 @@ const ProductDetails: NextPage<ProductDetailsProps> = ({ data }) => {
             </button>
             {cartErrMsg ? (
               <span className="!mt-2 block text-red-500">
-                Item is already in cart
+                {cartErrMsg}
                 {/* <Link to="/cart" className="text-black underline">
                 click here
               </Link>{" "}
