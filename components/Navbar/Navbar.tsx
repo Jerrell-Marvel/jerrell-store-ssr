@@ -27,6 +27,7 @@ const navLinks = ["about", "wishlist"];
 const productCategories = ["all", "hoodie", "snacks", "jeans", "shorts", "shirts"];
 const Navbar = () => {
   // const navigate = useNavigate();
+  const router = useRouter();
   const [navActive, setNavActive] = useState(false);
   const [showProductCategories, setShowProductCategories] = useState(false);
   const [search, setSearch] = useState("");
@@ -39,7 +40,7 @@ const Navbar = () => {
   const onSubmitHandler = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     setSearch("");
-    // navigate(`/search?q=${search}&sort=newest`);
+    router.push(`http://localhost:3000/search?q=${search}&sort=newest&page=1`);
   };
 
   const { data, isLoading, error } = useQuery<UserType, any>({
