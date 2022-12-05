@@ -48,11 +48,11 @@ const ShowProducts: NextPage<ShowProductsProps> = ({ data }) => {
     <>
       <ul className="flex w-full flex-wrap py-10">
         {data && data.products.length < 1 ? (
-          <div className="text-center">
+          <div className="text-center w-full flex flex-col items-center">
             <span>No products found</span>
 
-            <Link href={`/product-category/all`} className="mx-auto mt-8 block w-fit">
-              <a>See All Products</a>
+            <Link href={`/product-category/all`}>
+              <a className="w-fit border-2 border-black bg-primary px-4 py-2 text-sm uppercase text-white transition-colors duration-300 block mt-6">See All Products</a>
             </Link>
           </div>
         ) : (
