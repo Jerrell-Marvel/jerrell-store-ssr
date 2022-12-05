@@ -2,7 +2,7 @@ import axios from "axios";
 import { NextPage } from "next";
 import Link from "next/link";
 import { useRouter } from "next/router";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useMutation, useQuery, useQueryClient } from "react-query";
 import NavCart from "./NavCart";
 // import { useEffect, useState } from "react";
@@ -43,7 +43,12 @@ const Navbar = () => {
     router.push(`http://localhost:3000/search?q=${search}&sort=newest&page=1`);
   };
 
-  const { data, isLoading, error } = useQuery<UserType, any>({
+  const {
+    data,
+    isLoading,
+    error,
+    refetch: loginUser,
+  } = useQuery<UserType, any>({
     queryKey: ["profile"],
     queryFn: async () => {
       const response = await axios.get("http://localhost:5000/api/v1/auth/profile", { withCredentials: true });
@@ -51,7 +56,12 @@ const Navbar = () => {
       return data;
     },
     retry: false,
+    enabled: false,
   });
+
+  useEffect(() => {
+    loginUser();
+  }, [loginUser]);
 
   const {
     data: logoutResponse,
