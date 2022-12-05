@@ -6,6 +6,7 @@ import Pagination from "../../components/Pagination/Pagination";
 import ShowProducts from "../../components/ShowProducts/ShowProducts";
 import axios from "axios";
 import SortProductsDropdown from "../../components/Dropdown/SortProductsDropdown";
+import { useQuery } from "react-query";
 
 export type ProductCategoryProps = {
   data: {
@@ -31,13 +32,26 @@ export type ProductCategoryProps = {
 
 const ProductCategory: NextPage<ProductCategoryProps> = ({ data }) => {
   const router = useRouter();
+
+  const { data: products } = useQuery<ProductCategoryProps["data"]>({
+    queryKey: ["product", router.asPath],
+    queryFn: async () => {
+      const { sort = "newest", page = "1" } = router.query;
+      const url = `http://localhost:5000/api/v1/products?sort=${sort}&page=${page}`;
+      const response = await axios.get(url);
+      const data = response.data as ProductCategoryProps["data"];
+      return data;
+    },
+    initialData: data,
+  });
+
   return (
     <>
       <div className="bg-slate-200 pt-20 pb-8">
         <div className="bg-slate-100 px-6 py-10">
           <SortProductsDropdown />
-          <ShowProducts data={data} />
-          <Pagination pageCount={Math.ceil(data.totalCount / 10)} activePage={Number(router.query.page) || 1} />
+          <ShowProducts data={products!} />
+          <Pagination pageCount={Math.ceil(products!.totalCount / 10)} activePage={Number(router.query.page) || 1} />
         </div>
       </div>
     </>

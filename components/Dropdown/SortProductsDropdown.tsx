@@ -26,7 +26,7 @@ export default function SortProductsDropdown() {
       ref={selectRef}
       onChange={() => {
         const value = selectRef.current.options[selectRef.current.selectedIndex].value;
-        router.push(`${path}?${q ? `q=${q}&` : ""}sort=${value}&page=1`);
+        router.push(`${path}?${q ? `q=${q}&` : ""}sort=${value}&page=1`, undefined, { shallow: true });
       }}
     >
       <option value="newest">Newest</option>
