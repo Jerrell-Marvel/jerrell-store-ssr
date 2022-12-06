@@ -142,7 +142,7 @@ const ProductDetails: NextPage<ProductDetailsProps> = ({ data }) => {
   return (
     <>
       <section className="bg-slate-50 px-6 pt-20 pb-6">
-        <div className="flex flex-wrap">
+        <div className="flex flex-wrap pt-8">
           <div className="w-full md:w-1/2">
             <Image src={"https://source.unsplash.com/random/800x600"} alt="temporary alt" layout="responsive" width="4" height="3" />
           </div>
