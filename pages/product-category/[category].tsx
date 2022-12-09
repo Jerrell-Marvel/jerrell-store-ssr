@@ -48,9 +48,15 @@ const ProductCategory: NextPage<ProductCategoryProps> = ({ data }) => {
     queryKey: ["product", router.asPath],
     queryFn: async () => {
       try {
-        const { sort = "newest", page = "1" } = router.query;
-        const url = `http://localhost:5000/api/v1/products?sort=${sort}&page=${page}`;
-        const response = await axios.get(url);
+        const { sort = "newest", page = "1", category } = router.query;
+        // const url = `http://localhost:5000/api/v1/products?sort=${sort}&page=${page}&category=`;
+        const response = await axios.get(`http://localhost:5000/api/v1/products`, {
+          params: {
+            sort,
+            page,
+            category: category === "all" ? "" : category,
+          },
+        });
         const data = response.data as ProductCategoryProps["data"];
         return data;
       } catch (err) {
@@ -96,11 +102,14 @@ export const getServerSideProps: GetServerSideProps<ProductCategoryProps> = asyn
   } = context;
   console.log("GET SERVER SIDE PROPS RUNNING");
 
+  console.log(category);
+
   try {
     const response = await axios.get("http://localhost:5000/api/v1/products", {
       params: {
         sort,
         page,
+        category,
       },
     });
 

@@ -184,7 +184,7 @@ const Navbar = () => {
                   <div className={`w-full flex-col divide-y-[1px] rounded-lg bg-white pt-2 md:absolute md:left-0  md:top-full md:hidden md:w-full md:py-2 md:shadow-lg md:group-hover:flex ${showProductCategories ? "flex" : "hidden"}`}>
                     {productCategories.map((category, index) => {
                       return (
-                        <Link href={`/product-category/${category}`} passHref key={index}>
+                        <Link href={`/product-category/${category}?sort=newest&page=1`} passHref key={index}>
                           <div className="py-2 capitalize hover:underline md:flex md:w-full md:justify-center md:px-4 text-black" onClick={() => setNavActive((prev) => !prev)}>
                             {category}
                           </div>
