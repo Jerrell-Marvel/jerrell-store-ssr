@@ -66,6 +66,7 @@ const ProductCategory: NextPage<ProductCategoryProps> = ({ data }) => {
     // initialData: { success: false, products: null, count: 5, totalCount: 18 },
     refetchOnWindowFocus: false,
     retry: false,
+    initialData: firstRender ? data : undefined,
   });
 
   return (
