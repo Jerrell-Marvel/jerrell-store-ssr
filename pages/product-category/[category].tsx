@@ -38,7 +38,7 @@ const ProductCategory: NextPage<ProductCategoryProps> = ({ data }) => {
 
   useEffect(() => {
     setFirstRender(false);
-    console.log("[] called");
+    // console.log("[] called");
   }, []);
   const {
     data: products,
@@ -69,6 +69,13 @@ const ProductCategory: NextPage<ProductCategoryProps> = ({ data }) => {
     initialData: firstRender ? data : undefined,
   });
 
+  // useEffect(() => {
+  //   // console.log("data" + data);
+  //   // console.log("products" + products);
+  //   // console.log(isLoading);
+  //   console.log(products);
+  // }, [products]);
+
   return (
     <>
       <div className="bg-slate-200 pt-20 pb-8">
@@ -76,7 +83,7 @@ const ProductCategory: NextPage<ProductCategoryProps> = ({ data }) => {
           <SortProductsDropdown />
           {/* {firstRender ? JSON.stringify(data) : JSON.stringify(products)} */}
 
-          {firstRender ? (
+          {/* {firstRender ? (
             <div>
               <ShowProducts data={data} /> <Pagination pageCount={Math.ceil(data.totalCount / 10)} activePage={Number(router.query.page) || 1} />
             </div>
@@ -86,7 +93,15 @@ const ProductCategory: NextPage<ProductCategoryProps> = ({ data }) => {
             <div>
               <ShowProducts data={products!} /> <Pagination pageCount={Math.ceil(products!.totalCount / 10)} activePage={Number(router.query.page) || 1} />
             </div>
+          )} */}
+          {isLoading ? (
+            <ShowProductsSkeleton />
+          ) : (
+            <div>
+              <ShowProducts data={products!} /> <Pagination pageCount={Math.ceil(products!.totalCount / 10)} activePage={Number(router.query.page) || 1} />
+            </div>
           )}
+
           {/* <ShowProducts data={products!} /> */}
           {/* <Pagination pageCount={Math.ceil(data.totalCount / 10)} activePage={Number(router.query.page) || 1} /> */}
         </div>
@@ -110,7 +125,7 @@ export const getServerSideProps: GetServerSideProps<ProductCategoryProps> = asyn
       params: {
         sort,
         page,
-        category,
+        category: category === "all" ? "" : category,
       },
     });
 
