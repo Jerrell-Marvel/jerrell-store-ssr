@@ -1,7 +1,7 @@
 import { GetServerSideProps, NextPage } from "next";
 import Link from "next/link";
 import Router, { useRouter } from "next/router";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Pagination from "../../components/Pagination/Pagination";
 import ShowProducts from "../../components/ShowProducts/ShowProducts";
 import axios from "axios";
@@ -33,16 +33,28 @@ export type ProductCategoryProps = {
 const ProductCategory: NextPage<ProductCategoryProps> = ({ data }) => {
   const router = useRouter();
 
-  const { data: products } = useQuery<ProductCategoryProps["data"]>({
+  const [firstRender, setFirstRender] = useState(true);
+
+  useEffect(() => {
+    setFirstRender(false);
+    console.log("[] called");
+  }, []);
+  const { data: products, isLoading } = useQuery<ProductCategoryProps["data"]>({
     queryKey: ["product", router.asPath],
     queryFn: async () => {
-      const { sort = "newest", page = "1" } = router.query;
-      const url = `http://localhost:5000/api/v1/products?sort=${sort}&page=${page}`;
-      const response = await axios.get(url);
-      const data = response.data as ProductCategoryProps["data"];
-      return data;
+      try {
+        const { sort = "newest", page = "1" } = router.query;
+        const url = `http://localhost:5000/api/v1/products?sort=${sort}&page=${page}`;
+        const response = await axios.get(url);
+        const data = response.data as ProductCategoryProps["data"];
+        return data;
+      } catch (err) {
+        return { success: false, products: null, count: 0, totalCount: 0 };
+      }
     },
-    initialData: data,
+    // initialData: { success: false, products: null, count: 5, totalCount: 18 },
+    refetchOnWindowFocus: false,
+    retry: false,
   });
 
   return (
@@ -50,8 +62,19 @@ const ProductCategory: NextPage<ProductCategoryProps> = ({ data }) => {
       <div className="bg-slate-200 pt-20 pb-8">
         <div className="bg-slate-100 px-6 py-10">
           <SortProductsDropdown />
-          <ShowProducts data={products!} />
-          <Pagination pageCount={Math.ceil(products!.totalCount / 10)} activePage={Number(router.query.page) || 1} />
+          {/* {firstRender ? JSON.stringify(data) : JSON.stringify(products)} */}
+
+          {firstRender ? (
+            <div>
+              <ShowProducts data={data} /> <Pagination pageCount={Math.ceil(data.totalCount / 10)} activePage={Number(router.query.page) || 1} />
+            </div>
+          ) : isLoading ? null : (
+            <div>
+              <ShowProducts data={products!} /> <Pagination pageCount={Math.ceil(products!.totalCount / 10)} activePage={Number(router.query.page) || 1} />
+            </div>
+          )}
+          {/* <ShowProducts data={products!} /> */}
+          {/* <Pagination pageCount={Math.ceil(data.totalCount / 10)} activePage={Number(router.query.page) || 1} /> */}
         </div>
       </div>
     </>
@@ -64,6 +87,7 @@ export const getServerSideProps: GetServerSideProps<ProductCategoryProps> = asyn
   const {
     query: { category, page, sort },
   } = context;
+  console.log("GET SERVER SIDE PROPS RUNNING");
 
   try {
     const response = await axios.get("http://localhost:5000/api/v1/products", {
@@ -75,7 +99,6 @@ export const getServerSideProps: GetServerSideProps<ProductCategoryProps> = asyn
 
     const data = response.data as ProductCategoryProps["data"];
 
-    console.log("GET SERVER SIDE PROPS RUNNING");
     return {
       props: {
         data,
