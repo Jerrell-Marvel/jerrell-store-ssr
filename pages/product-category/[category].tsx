@@ -7,6 +7,7 @@ import ShowProducts from "../../components/ShowProducts/ShowProducts";
 import axios from "axios";
 import SortProductsDropdown from "../../components/Dropdown/SortProductsDropdown";
 import { useQuery } from "react-query";
+import ShowProductsSkeleton from "../../components/ShowProducts/ShowProductsSkeleton";
 
 export type ProductCategoryProps = {
   data: {
@@ -39,7 +40,11 @@ const ProductCategory: NextPage<ProductCategoryProps> = ({ data }) => {
     setFirstRender(false);
     console.log("[] called");
   }, []);
-  const { data: products, isLoading } = useQuery<ProductCategoryProps["data"]>({
+  const {
+    data: products,
+    isLoading,
+    isFetching,
+  } = useQuery<ProductCategoryProps["data"]>({
     queryKey: ["product", router.asPath],
     queryFn: async () => {
       try {
@@ -68,7 +73,9 @@ const ProductCategory: NextPage<ProductCategoryProps> = ({ data }) => {
             <div>
               <ShowProducts data={data} /> <Pagination pageCount={Math.ceil(data.totalCount / 10)} activePage={Number(router.query.page) || 1} />
             </div>
-          ) : isLoading ? null : (
+          ) : isLoading ? (
+            <ShowProductsSkeleton />
+          ) : (
             <div>
               <ShowProducts data={products!} /> <Pagination pageCount={Math.ceil(products!.totalCount / 10)} activePage={Number(router.query.page) || 1} />
             </div>
