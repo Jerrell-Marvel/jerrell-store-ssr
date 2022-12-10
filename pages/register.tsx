@@ -1,5 +1,6 @@
 import axios from "axios";
 import { NextPage } from "next";
+import { useRouter } from "next/router";
 import { useState } from "react";
 import { useMutation } from "react-query";
 // import { useNavigate } from "react-router-dom";
@@ -24,6 +25,7 @@ const Register: NextPage = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [errorMessage, setErrorMessage] = useState("");
+  const router = useRouter();
 
   const [emailErrorMessage, setEmailErrorMessage] = useState("");
   type RegisterApiResponse = {
@@ -65,6 +67,9 @@ const Register: NextPage = () => {
         setEmailErrorMessage("");
         setErrorMessage("Something went wrong please try again later");
       }
+    },
+    onSuccess: () => {
+      router.push("/login");
     },
   });
   //   const navigate = useNavigate();
