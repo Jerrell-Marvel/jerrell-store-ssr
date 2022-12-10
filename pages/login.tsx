@@ -8,6 +8,7 @@ import { useMutation, useQueryClient } from "react-query";
 import Link from "next/link";
 import axios from "axios";
 import matchRegex from "../utils/matchRegex";
+import Router, { useRouter } from "next/router";
 
 type LoginApiResponse = {
   username: string;
@@ -30,6 +31,7 @@ function Login() {
   const queryClient = useQueryClient();
 
   //   const navigate = useNavigate();
+  const router = useRouter();
 
   const {
     data,
@@ -45,6 +47,7 @@ function Login() {
     },
     onSuccess: (response) => {
       queryClient.setQueryData(["profile"], { username: response.username, cartCount: response.cartCount });
+      router.push("/");
     },
     onError: (error) => {
       if (error?.response?.data?.message === "incorrect password") {
