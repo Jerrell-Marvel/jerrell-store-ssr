@@ -8,24 +8,25 @@ import ProductsCarousel from "../components/Carousel/ProductsCarousel/ProductsCa
 import Service from "../components/Service/Service";
 import styles from "../styles/Home.module.css";
 
+type carouselProductsType = {
+  success: boolean;
+  products:
+    | {
+        _id: string;
+        name: string;
+        weight: string;
+        category: string;
+        stock: string;
+        description: string;
+        price: string;
+        createdAt: string;
+        updatedAt: string;
+        image: string;
+      }[]
+    | null;
+};
 type HomeProps = {
-  carouselProducts: {
-    success: boolean;
-    products:
-      | {
-          _id: string;
-          name: string;
-          weight: string;
-          category: string;
-          stock: string;
-          description: string;
-          price: string;
-          createdAt: string;
-          updatedAt: string;
-          image: string;
-        }[]
-      | null;
-  }[];
+  carouselProducts: carouselProductsType[];
 };
 
 const Home: NextPage<HomeProps> = ({ carouselProducts }) => {
@@ -54,12 +55,12 @@ const Home: NextPage<HomeProps> = ({ carouselProducts }) => {
   );
 };
 
-export const getServerSideProps: GetServerSideProps = async () => {
+export const getServerSideProps: GetServerSideProps<HomeProps> = async () => {
   try {
-    const carouselProductsPromises: Promise<AxiosResponse<HomeProps["carouselProducts"], any>>[] = [];
+    const carouselProductsPromises: Promise<AxiosResponse<carouselProductsType, any>>[] = [];
     for (let i = 1; i <= 3; i++) {
       const url = `http://localhost:5000/api/v1/products?sort=newest&page=${i}`;
-      const promise: Promise<AxiosResponse<HomeProps["carouselProducts"], any>> = axios.get(url);
+      const promise: Promise<AxiosResponse<carouselProductsType, any>> = axios.get(url);
       carouselProductsPromises.push(promise);
     }
 
@@ -72,9 +73,14 @@ export const getServerSideProps: GetServerSideProps = async () => {
       },
     };
   } catch (err) {
+    const data = [];
+
+    for (let i = 0; i < 3; i++) {
+      data.push({ success: false, products: null });
+    }
     return {
       props: {
-        carouselProducts: { success: false, products: null },
+        carouselProducts: data,
       },
     };
   }
