@@ -130,7 +130,7 @@ const Navbar = () => {
 
   return (
     <>
-      <header className="fixed z-[99] flex h-20 w-full items-center border-b-2 bg-white px-6">
+      <header className="fixed z-[99] flex h-20 w-full items-center border-b-2 bg-white px-6 top-0">
         <div className="flex w-full items-center">
           <Link href="/" passHref>
             <div className="py-6 pr-4 font-bold uppercase text-black">jStore</div>

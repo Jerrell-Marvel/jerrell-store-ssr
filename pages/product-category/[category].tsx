@@ -8,6 +8,7 @@ import axios from "axios";
 import SortProductsDropdown from "../../components/Dropdown/SortProductsDropdown";
 import { useQuery } from "react-query";
 import ShowProductsSkeleton from "../../components/ShowProducts/ShowProductsSkeleton";
+import CategoryNav from "../../components/Navbar/CategoryNav";
 
 export type ProductCategoryProps = {
   data: {
@@ -78,6 +79,7 @@ const ProductCategory: NextPage<ProductCategoryProps> = ({ data }) => {
 
   return (
     <>
+      <CategoryNav />
       <div className="bg-slate-200 pt-20 pb-8">
         <div className="bg-slate-100 px-6 py-10">
           <SortProductsDropdown />
