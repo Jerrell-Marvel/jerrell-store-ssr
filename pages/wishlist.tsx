@@ -1,8 +1,10 @@
 import axios from "axios";
 import { NextPage } from "next";
 import Link from "next/link";
+import { useRouter } from "next/router";
 import { useState } from "react";
 import { useMutation, useQuery, useQueryClient } from "react-query";
+import LoadingSpinner from "../components/Spinner/LoadingSpinner";
 type WishlistType = {
   _id: string;
   product: {
@@ -28,6 +30,7 @@ const Wishlist: NextPage = () => {
   //   const navigate = useNavigate();
   const [fetchErrorMessage, setFetchErrorMessage] = useState("");
   const queryClient = useQueryClient();
+  const router = useRouter();
 
   const {
     data: wishlistData,
@@ -38,19 +41,21 @@ const Wishlist: NextPage = () => {
   } = useQuery<WishlistApiResponseType, any>({
     queryKey: ["wishlist"],
     queryFn: async () => {
-      const response = await axios.get("http://localhost:5000/api/v1/wishlist", { withCredentials: true });
+      const response = await axios.get("http://localhost:5000/api/v1/wishlist");
       const data = response.data as WishlistApiResponseType;
       return data;
     },
     onError: (error) => {
-      if (error.response.status === 401) {
+      if (error?.response?.status === 401) {
         // navigate("/login");
-      } else if (error.code === "ERR_NETWORK") {
+        router.push("/login");
+      } else if (error?.code === "ERR_NETWORK") {
         setFetchErrorMessage("Something went wrong please try again later");
       } else {
         setFetchErrorMessage("Something went wrong please try again");
       }
     },
+    retry: false,
   });
 
   //   const {
@@ -168,8 +173,7 @@ const Wishlist: NextPage = () => {
         <div className="bg-slate-100 p-4 text-center ">
           {!isFetchError ? (
             isLoading ? (
-              //   <LoadingSpinner color="primary" />
-              "Loading"
+              <LoadingSpinner color="primary" />
             ) : (
               <div>
                 <h3 className="my-4 text-3xl font-medium">My Wishlist</h3>

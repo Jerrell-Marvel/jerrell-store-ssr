@@ -1,6 +1,7 @@
 import axios from "axios";
 import { NextPage } from "next";
 import Link from "next/link";
+import { useRouter } from "next/router";
 import { useState } from "react";
 import { useMutation, useQuery, useQueryClient } from "react-query";
 import { UserType } from "../components/Navbar/Navbar";
@@ -44,6 +45,7 @@ type UpdateCartApiResponseType = {
 const Cart: NextPage = () => {
   const [fetchErrorMessage, setFetchErrorMessage] = useState("");
   const queryClient = useQueryClient();
+  const router = useRouter();
   const {
     data: cartData,
     isLoading: fetchLoading,
@@ -59,7 +61,7 @@ const Cart: NextPage = () => {
     },
     onError: (fetchError) => {
       if (fetchError?.response?.status === 401) {
-        // navigate("/login");
+        router.push("/login");
       } else if (fetchError?.code === "ERR_NETWORK") {
         setFetchErrorMessage("Something went wrong please try again later");
       } else {
