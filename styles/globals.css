@@ -20,7 +20,7 @@
   @apply -rotate-45;
 }
 
-.active > p {
+.active > span {
   @apply relative w-fit after:absolute after:-bottom-1/4 after:left-0 after:block after:h-[3px] after:w-full after:bg-slate-800  after:content-[''];
 }
 

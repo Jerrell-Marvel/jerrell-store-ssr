@@ -23,7 +23,10 @@ export type UserType = {
   cartCount: number;
 };
 
-const navLinks = ["about", "wishlist"];
+const navLinks = [
+  { title: "about", path: "/about" },
+  { title: "wishlist", path: "/wishlist" },
+];
 const productCategories = ["all", "hoodie", "snacks", "jeans", "shorts", "shirts"];
 const Navbar = () => {
   // const navigate = useNavigate();
@@ -161,12 +164,12 @@ const Navbar = () => {
               {navLinks.map((navLink, index) => {
                 return (
                   <li key={index}>
-                    <Link href={`/${navLink}`} passHref>
-                      <div className=" group block w-full py-3 pl-6 md:py-6 md:px-4 cursor-pointer" onClick={() => setNavActive((prev) => !prev)}>
-                        <span className="relative w-fit font-medium uppercase after:absolute after:-bottom-1/4 after:left-1/2 after:block after:h-[3px]  after:w-0 after:bg-slate-800 after:transition-all after:duration-300 after:content-[''] group-hover:after:left-0 group-hover:after:right-0 group-hover:after:w-full text-black">
-                          {navLink}
+                    <Link href={`${navLink.path}`} passHref>
+                      <a className={`group block w-full py-3 pl-6 md:py-6 md:px-4 cursor-pointer ${navLink.path === router.pathname ? "active" : ""}`} onClick={() => setNavActive((prev) => !prev)}>
+                        <span className="relative w-fit font-medium uppercase after:absolute after:-bottom-1/4 after:left-1/2 after:block after:h-[3px] after:w-0 after:bg-slate-800 after:transition-all after:duration-300 after:content-[''] group-hover:after:left-0 group-hover:after:right-0 group-hover:after:w-full text-black">
+                          {navLink.title}
                         </span>
-                      </div>
+                      </a>
                     </Link>
                   </li>
                 );
