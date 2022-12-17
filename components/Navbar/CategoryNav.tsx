@@ -15,7 +15,7 @@ const CategoryNav = () => {
           {categoryLinks.map((categoryLink, index) => {
             return (
               <li className="h-full" key={index}>
-                <Link href={`/product-category/${categoryLink}`} className="group flex h-full items-center">
+                <Link href={`/product-category/${categoryLink}?sort=newest&page=1`} className="group flex h-full items-center" shallow={true}>
                   <a className={`group flex h-full items-center ${categoryLink === router.query.category ? "active" : ""}`}>
                     <span className="relative w-fit font-medium uppercase after:absolute after:-bottom-1/4 after:left-1/2 after:block after:h-[3px]  after:w-0 after:bg-slate-800 after:transition-all after:duration-300 after:content-[''] group-hover:after:left-0 group-hover:after:right-0 group-hover:after:w-full">
                       {categoryLink}
