@@ -80,12 +80,12 @@ const ProductCategory: NextPage<ProductCategoryProps> = ({ data }) => {
   return (
     <>
       <CategoryNav />
-      <div className="bg-slate-200 pt-20 pb-8">
-        <div className="bg-slate-100 px-6 py-10">
-          <SortProductsDropdown />
-          {/* {firstRender ? JSON.stringify(data) : JSON.stringify(products)} */}
 
-          {/* {firstRender ? (
+      <div className="bg-slate-100 px-6 py-10">
+        <SortProductsDropdown />
+        {/* {firstRender ? JSON.stringify(data) : JSON.stringify(products)} */}
+
+        {/* {firstRender ? (
             <div>
               <ShowProducts data={data} /> <Pagination pageCount={Math.ceil(data.totalCount / 10)} activePage={Number(router.query.page) || 1} />
             </div>
@@ -96,17 +96,16 @@ const ProductCategory: NextPage<ProductCategoryProps> = ({ data }) => {
               <ShowProducts data={products!} /> <Pagination pageCount={Math.ceil(products!.totalCount / 10)} activePage={Number(router.query.page) || 1} />
             </div>
           )} */}
-          {isLoading ? (
-            <ShowProductsSkeleton />
-          ) : (
-            <div>
-              <ShowProducts data={products!} /> <Pagination pageCount={Math.ceil(products!.totalCount / 10)} activePage={Number(router.query.page) || 1} />
-            </div>
-          )}
+        {isLoading ? (
+          <ShowProductsSkeleton />
+        ) : (
+          <div>
+            <ShowProducts data={products!} /> <Pagination pageCount={Math.ceil(products!.totalCount / 10)} activePage={Number(router.query.page) || 1} />
+          </div>
+        )}
 
-          {/* <ShowProducts data={products!} /> */}
-          {/* <Pagination pageCount={Math.ceil(data.totalCount / 10)} activePage={Number(router.query.page) || 1} /> */}
-        </div>
+        {/* <ShowProducts data={products!} /> */}
+        {/* <Pagination pageCount={Math.ceil(data.totalCount / 10)} activePage={Number(router.query.page) || 1} /> */}
       </div>
     </>
   );
