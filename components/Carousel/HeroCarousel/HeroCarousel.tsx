@@ -6,18 +6,28 @@ import "swiper/css/pagination";
 import "swiper/css/navigation";
 import "swiper/css/effect-fade";
 import Image from "next/image";
+import { motion } from "framer-motion";
 
 // Images url
 const heroImages = ["https://source.unsplash.com/random/1600x800", "https://source.unsplash.com/random/1600x801", "https://source.unsplash.com/random/1600x799"];
 
+const carouselContainer = {
+  hidden: {
+    opacity: 0,
+  },
+  visible: {
+    opacity: 1,
+  },
+};
+
 function HeroCarousel() {
-  const heroCarouselRef = useRef<HTMLDivElement>(null!);
-  useEffect(() => {
-    heroCarouselRef.current.style.opacity = "1";
-  }, []);
+  // const heroCarouselRef = useRef<HTMLDivElement>(null!);
+  // useEffect(() => {
+  //   heroCarouselRef.current.style.opacity = "1";
+  // }, []);
 
   return (
-    <div className="hero-carousel opacity-0 transition-opacity duration-[1500ms]" ref={heroCarouselRef}>
+    <motion.div className="hero-carousel transition-opacity duration-[1500ms]" variants={carouselContainer} initial="hidden" animate="visible">
       <Swiper
         modules={[Autoplay, Pagination, Navigation, EffectFade]}
         navigation
@@ -41,7 +51,7 @@ function HeroCarousel() {
           );
         })}
       </Swiper>
-    </div>
+    </motion.div>
   );
 }
 
