@@ -5,6 +5,7 @@ import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
 import { useMutation, useQuery, useQueryClient } from "react-query";
 import NavCart from "./NavCart";
+import { AnimatePresence, LayoutGroup, motion } from "framer-motion";
 // import { useEffect, useState } from "react";
 // import { useEffect, useState } from "react";
 // import { NavLink, Link, useNavigate } from "react-router-dom";
@@ -13,6 +14,21 @@ import NavCart from "./NavCart";
 // import useApi from "../../customHooks/useApi2";
 // import { useQueryClient } from "react-query";
 // import { useFetch } from "../../customHooks/useFetch2";
+
+const categoryContainerVariants = {
+  hidden: {
+    opacity: 0,
+    transition: {
+      duration: 0.2,
+    },
+  },
+  visible: {
+    opacity: 1,
+    transition: {
+      duration: 0.2,
+    },
+  },
+};
 
 type LogoutApiResponse = {
   success: boolean;
@@ -160,48 +176,78 @@ const Navbar = () => {
           </button>
 
           <nav className={`fixed right-0  top-0 z-[102] ml-auto h-screen bg-white shadow-md transition-transform duration-300 md:static md:h-full md:translate-x-0 md:shadow-none ${navActive ? "translate-x-0" : "translate-x-full"}`}>
-            <ul className="mt-20 w-48 divide-y-2 border-t-2 border-b-2 md:mt-0 md:flex md:w-auto md:items-center md:divide-y-0 md:border-none">
-              {navLinks.map((navLink, index) => {
-                return (
-                  <li key={index}>
-                    <Link href={`${navLink.path}`} passHref>
-                      <a className={`group block w-full py-3 pl-6 md:py-6 md:px-4 cursor-pointer ${navLink.path === router.pathname ? "active" : ""}`} onClick={() => setNavActive((prev) => !prev)}>
-                        <span className="relative w-fit font-medium uppercase after:absolute after:-bottom-1/4 after:left-1/2 after:block after:h-[3px] after:w-0 after:bg-slate-800 after:transition-all after:duration-300 after:content-[''] group-hover:after:left-0 group-hover:after:right-0 group-hover:after:w-full text-black">
-                          {navLink.title}
-                        </span>
-                      </a>
-                    </Link>
-                  </li>
-                );
-              })}
+            <LayoutGroup>
+              <motion.ul className="mt-20 w-48 border-t-2 border-b-2 md:mt-0 md:flex md:w-auto md:items-center md:divide-y-0 md:border-none" layout>
+                {navLinks.map((navLink, index) => {
+                  return (
+                    <motion.li key={index} layout className="border-b-2">
+                      <Link href={`${navLink.path}`} passHref>
+                        <a className={`group block w-full py-3 pl-6 md:py-6 md:px-4 cursor-pointer ${navLink.path === router.pathname ? "active" : ""}`} onClick={() => setNavActive((prev) => !prev)}>
+                          <span className="relative w-fit font-medium uppercase after:absolute after:-bottom-1/4 after:left-1/2 after:block after:h-[3px] after:w-0 after:bg-slate-800 after:transition-all after:duration-300 after:content-[''] group-hover:after:left-0 group-hover:after:right-0 group-hover:after:w-full text-black">
+                            {navLink.title}
+                          </span>
+                        </a>
+                      </Link>
+                    </motion.li>
+                  );
+                })}
 
-              <li>
-                <div onClick={() => setShowProductCategories((prev) => !prev)} className="group relative block w-full cursor-pointer py-3 pl-6 md:py-6 md:px-4">
-                  <div className="relative w-fit font-medium uppercase after:absolute after:-bottom-1/4 after:left-1/2 after:block after:h-[3px] after:w-0 after:bg-slate-800 after:transition-all after:duration-300  group-hover:after:left-0 group-hover:after:right-0 group-hover:after:w-full text-black flex items-center">
-                    products
-                    <svg clipRule="evenodd" fillRule="evenodd" strokeLinejoin="round" strokeMiterlimit="2" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" width="32" height="32">
-                      <path d="m16.843 10.211c.108-.141.157-.3.157-.456 0-.389-.306-.755-.749-.755h-8.501c-.445 0-.75.367-.75.755 0 .157.05.316.159.457 1.203 1.554 3.252 4.199 4.258 5.498.142.184.36.29.592.29.23 0 .449-.107.591-.291 1.002-1.299 3.044-3.945 4.243-5.498z" />
-                    </svg>
-                  </div>
+                <motion.li layout className="border-b-2">
+                  <motion.div onClick={() => setShowProductCategories((prev) => !prev)} className="group relative block w-full cursor-pointer py-3 pl-6 md:py-6 md:px-4" layout>
+                    <motion.div
+                      layout
+                      className="relative w-fit font-medium uppercase after:absolute after:-bottom-1/4 after:left-1/2 after:block after:h-[3px] after:w-0 after:bg-slate-800 after:transition-all after:duration-300  group-hover:after:left-0 group-hover:after:right-0 group-hover:after:w-full text-black flex items-center"
+                    >
+                      products
+                      <svg clipRule="evenodd" fillRule="evenodd" strokeLinejoin="round" strokeMiterlimit="2" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" width="32" height="32">
+                        <path d="m16.843 10.211c.108-.141.157-.3.157-.456 0-.389-.306-.755-.749-.755h-8.501c-.445 0-.75.367-.75.755 0 .157.05.316.159.457 1.203 1.554 3.252 4.199 4.258 5.498.142.184.36.29.592.29.23 0 .449-.107.591-.291 1.002-1.299 3.044-3.945 4.243-5.498z" />
+                      </svg>
+                    </motion.div>
 
-                  <div className={`w-full flex-col divide-y-[1px] rounded-lg bg-white pt-2 md:absolute md:left-0  md:top-full md:hidden md:w-full md:py-2 md:shadow-lg md:group-hover:flex ${showProductCategories ? "flex" : "hidden"}`}>
-                    {productCategories.map((category, index) => {
-                      return (
-                        <Link href={`/product-category/${category}?sort=newest&page=1`} passHref key={index}>
-                          <div className="py-2 capitalize hover:underline md:flex md:w-full md:justify-center md:px-4 text-black" onClick={() => setNavActive((prev) => !prev)}>
-                            {category}
-                          </div>
-                        </Link>
-                      );
-                    })}
-                  </div>
-                </div>
-              </li>
+                    {/* Show only on md above */}
+                    <motion.div layout className={`w-full flex-col divide-y-[1px] rounded-lg bg-white pt-2 md:absolute md:left-0  md:top-full md:w-full md:py-2 md:shadow-lg md:group-hover:flex hidden`}>
+                      {productCategories.map((category, index) => {
+                        return (
+                          <Link href={`/product-category/${category}?sort=newest&page=1`} passHref key={index}>
+                            <div className="py-2 capitalize hover:underline md:flex md:w-full md:justify-center md:px-4 text-black" onClick={() => setNavActive((prev) => !prev)}>
+                              {category}
+                            </div>
+                          </Link>
+                        );
+                      })}
+                    </motion.div>
 
-              <NavCart amount={data?.cartCount} />
+                    <AnimatePresence>
+                      {showProductCategories ? (
+                        <motion.div
+                          layout
+                          className={`w-full flex-col divide-y-[1px] rounded-lg bg-white pt-2 md:absolute md:left-0  md:top-full md:hidden md:w-full md:py-2 md:shadow-lg`}
+                          variants={categoryContainerVariants}
+                          animate="visible"
+                          initial="hidden"
+                          exit="hidden"
+                        >
+                          {productCategories.map((category, index) => {
+                            return (
+                              <Link href={`/product-category/${category}?sort=newest&page=1`} passHref key={index}>
+                                <div className="py-2 capitalize hover:underline md:flex md:w-full md:justify-center md:px-4 text-black" onClick={() => setNavActive((prev) => !prev)}>
+                                  {category}
+                                </div>
+                              </Link>
+                            );
+                          })}
+                        </motion.div>
+                      ) : null}
+                    </AnimatePresence>
+                  </motion.div>
+                </motion.li>
 
-              <li>
-                {/* {data ? (
+                <motion.li layout className="border-b-2">
+                  <NavCart amount={data?.cartCount} />
+                </motion.li>
+
+                <motion.li layout>
+                  {/* {data ? (
                   <div
                     onClick={() => {
                       sendLogoutRequest({});
@@ -215,29 +261,30 @@ const Navbar = () => {
                     <Button>Login</Button>
                   </NavLink>
                 )} */}
-                {data ? (
-                  <div
-                    className="z-10 block py-3 pl-6 md:py-0 md:pl-0"
-                    onClick={() => {
-                      sendLogoutRequest({});
-                    }}
-                  >
-                    <button className="w-fit rounded-md border-2 border-black bg-primary py-2 px-6 text-white transition duration-200 ease-in-out hover:bg-white hover:text-primary">Logout</button>
-                  </div>
-                ) : (
-                  <Link href="/login" passHref>
-                    <div className="z-10 block py-3 pl-6 md:py-0 md:pl-0">
-                      <button className="w-fit rounded-md border-2 border-black bg-primary py-2 px-6 text-white transition duration-200 ease-in-out hover:bg-white hover:text-primary">Login</button>
+                  {data ? (
+                    <div
+                      className="z-10 block py-3 pl-6 md:py-0 md:pl-0"
+                      onClick={() => {
+                        sendLogoutRequest({});
+                      }}
+                    >
+                      <button className="w-fit rounded-md border-2 border-black bg-primary py-2 px-6 text-white transition duration-200 ease-in-out hover:bg-white hover:text-primary">Logout</button>
                     </div>
-                  </Link>
-                )}
-                {/* <Link href="/login" passHref>
+                  ) : (
+                    <Link href="/login" passHref>
+                      <div className="z-10 block py-3 pl-6 md:py-0 md:pl-0">
+                        <button className="w-fit rounded-md border-2 border-black bg-primary py-2 px-6 text-white transition duration-200 ease-in-out hover:bg-white hover:text-primary">Login</button>
+                      </div>
+                    </Link>
+                  )}
+                  {/* <Link href="/login" passHref>
                   <div className="z-10 block py-3 pl-6 md:py-0 md:pl-0">
                     <button className="w-fit rounded-md border-2 border-black bg-primary py-2 px-6 text-white transition duration-200 ease-in-out hover:bg-white hover:text-primary">Login</button>
                   </div>
                 </Link> */}
-              </li>
-            </ul>
+                </motion.li>
+              </motion.ul>
+            </LayoutGroup>
           </nav>
         </div>
         <div onClick={() => setNavActive((prev) => !prev)} className={`fixed left-0 right-0 bottom-0 top-0 z-[100] bg-black opacity-40 md:hidden ${navActive ? "visible" : "invisible"}`}></div>
