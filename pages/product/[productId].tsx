@@ -7,6 +7,7 @@ import { useRouter } from "next/router";
 import { UserType } from "../../components/Navbar/Navbar";
 import LoadingSpinner from "../../components/Spinner/LoadingSpinner";
 import Link from "next/link";
+import { motion } from "framer-motion";
 
 type ProductDetailsProps = {
   data: {
@@ -25,8 +26,33 @@ type ProductDetailsProps = {
     };
   };
 };
+// const productVariants = {
+//   visible: {
+//     transition: {
+//       staggerChildren: 0.2,
+//     },
+//   },
+// };
 
-type test = (productId: string, quantity: string) => any;
+const backgroundVariants = {
+  hidden: {
+    opacity: 0,
+  },
+  visible: {
+    opacity: 0.5,
+  },
+};
+
+const modalVariants = {
+  hidden: {
+    opacity: 0,
+    y: "-100%",
+  },
+  visible: {
+    opacity: 1,
+    y: 0,
+  },
+};
 
 const ProductDetails: NextPage<ProductDetailsProps> = ({ data }) => {
   const router = useRouter();
@@ -213,9 +239,9 @@ const ProductDetails: NextPage<ProductDetailsProps> = ({ data }) => {
       </section>
       {activeModal ? (
         <div>
-          <div className="fixed left-0 right-0 bottom-0 top-0 z-10 bg-black opacity-40"></div>
-          <div className="fixed left-0 right-0 bottom-0 top-0 z-20 pt-20">
-            <div className="absolute top-1/2 left-1/2 w-[80%] -translate-x-1/2 -translate-y-1/2 rounded-md bg-white p-6 lg:w-1/2">
+          <motion.div className="fixed left-0 right-0 bottom-0 top-0 z-10 bg-black opacity-40" initial="hidden" animate="visible" variants={backgroundVariants}></motion.div>
+          <div className="fixed left-0 right-0 bottom-0 top-0 z-20 pt-20 flex justify-center items-center">
+            <motion.div className="absolute w-[80%] rounded-md bg-white p-6 lg:w-1/2" initial="hidden" animate="visible" variants={modalVariants}>
               <h4 className="mb-2 text-3xl font-medium uppercase">successfully added</h4>
               <span>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Totam, rem. Lorem ipsum dolor sit amet consectetur adipisicing elit. Corrupti, dolor.</span>
 
@@ -233,7 +259,7 @@ const ProductDetails: NextPage<ProductDetailsProps> = ({ data }) => {
                   <a className="w-fit border-2 border-black bg-primary px-4 py-2 text-sm uppercase text-white transition-colors duration-300 block"> {`${activeModal} page`}</a>
                 </Link>
               </div>
-            </div>
+            </motion.div>
           </div>
         </div>
       ) : (
