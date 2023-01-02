@@ -180,7 +180,7 @@ const Navbar = () => {
               <motion.ul className="mt-20 w-48 border-t-2 border-b-2 md:mt-0 md:flex md:w-auto md:items-center md:divide-y-0 md:border-none" layout>
                 {navLinks.map((navLink, index) => {
                   return (
-                    <motion.li key={index} layout className="border-b-2">
+                    <motion.li key={index} layout className="border-b-2 md:border-none">
                       <Link href={`${navLink.path}`} passHref>
                         <a className={`group block w-full py-3 pl-6 md:py-6 md:px-4 cursor-pointer ${navLink.path === router.pathname ? "active" : ""}`} onClick={() => setNavActive((prev) => !prev)}>
                           <span className="relative w-fit font-medium uppercase after:absolute after:-bottom-1/4 after:left-1/2 after:block after:h-[3px] after:w-0 after:bg-slate-800 after:transition-all after:duration-300 after:content-[''] group-hover:after:left-0 group-hover:after:right-0 group-hover:after:w-full text-black">
@@ -205,7 +205,7 @@ const Navbar = () => {
                     </motion.div>
 
                     {/* Show only on md above */}
-                    <motion.div layout className={`w-full flex-col divide-y-[1px] rounded-lg bg-white pt-2 md:absolute md:left-0  md:top-full md:w-full md:py-2 md:shadow-lg md:group-hover:flex hidden`}>
+                    <motion.div layout className={`w-full flex-col divide-y-[1px] rounded-lg bg-white pt-2 md:absolute md:left-0 md:top-full md:w-full md:py-2 md:shadow-lg md:group-hover:flex hidden`}>
                       {productCategories.map((category, index) => {
                         return (
                           <Link href={`/product-category/${category}?sort=newest&page=1`} passHref key={index}>
