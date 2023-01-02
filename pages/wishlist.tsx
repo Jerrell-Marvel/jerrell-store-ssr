@@ -41,7 +41,7 @@ const Wishlist: NextPage = () => {
   } = useQuery<WishlistApiResponseType, any>({
     queryKey: ["wishlist"],
     queryFn: async () => {
-      const response = await axios.get("http://localhost:5000/api/v1/wishlist");
+      const response = await axios.get("http://localhost:5000/api/v1/wishlist", { withCredentials: true });
       const data = response.data as WishlistApiResponseType;
       return data;
     },
